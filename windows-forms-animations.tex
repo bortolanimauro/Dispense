@@ -23,7 +23,12 @@
 \usepackage{amsmath}
 \usepackage{tcolorbox}
 \usepackage{enumitem}
-
+% Titoli più grandi e spaziati
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\LARGE\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex}{2.3ex}
+\titleformat{\subsection}{\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{3.25ex}{1.5ex}
 % Impostazioni pagina
 \geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
 
