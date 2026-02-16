@@ -2194,6 +2194,365 @@ In questa dispensa abbiamo imparato:
 
 \vspace{2cm}
 
+% ====================================
+% GLOSSARIO
+% ====================================
+\newpage
+\section*{Glossario dei Termini}
+\addcontentsline{toc}{section}{Glossario dei Termini}
+
+\subsection*{A}
+
+\textbf{Add (metodo)}: Comando che serve ad aggiungere un elemento a una Lista. 
+Esempio: \texttt{nomi.Add("Mario");} aggiunge "Mario" alla lista \texttt{nomi}.
+
+\textbf{Array}: Una collezione di elementi dello stesso tipo, di dimensione fissa. 
+Esempio: \texttt{int[] numeri = new int[5];} crea un array di 5 numeri interi.
+
+\subsection*{B}
+
+\textbf{BackColor}: Proprietà che imposta il colore di sfondo di un controllo o della Form. 
+Esempio: \texttt{this.BackColor = Color.Blue;} colora lo sfondo di blu.
+
+\textbf{Bitmap}: Un'immagine digitale composta da una griglia di pixel. Nel nostro progetto, 
+è il "foglio digitale" su cui disegniamo. Ogni pixel può avere un colore diverso.
+
+\textbf{BorderStyle}: Proprietà che definisce il tipo di bordo di un controllo. 
+Può essere \texttt{None} (nessun bordo), \texttt{FixedSingle} (linea singola) o 
+\texttt{Fixed3D} (effetto tridimensionale).
+
+\textbf{break}: Parola chiave che interrompe l'esecuzione di un ciclo o di un blocco 
+\texttt{switch}. Serve per "uscire" immediatamente dal codice ripetitivo.
+
+\textbf{Button (pulsante)}: Un controllo cliccabile che l'utente può premere per 
+eseguire un'azione. Di solito gestito tramite l'evento \texttt{Click}.
+
+\subsection*{C}
+
+\textbf{case}: Usato dentro un blocco \texttt{switch}, rappresenta un possibile valore 
+da confrontare. Ogni \texttt{case} deve terminare con \texttt{break}.
+
+\textbf{Classe}: Il "progetto" o "stampo" che descrive come deve essere fatto un oggetto. 
+Contiene proprietà (caratteristiche) e metodi (azioni). Esempio: la classe 
+\texttt{Quadratino} descrive come è fatto un quadratino.
+
+\textbf{Click (evento)}: Si attiva quando l'utente clicca su un controllo (come un Button). 
+È l'evento più usato per far reagire il programma alle azioni dell'utente.
+
+\textbf{Collisione}: Quando due oggetti (come un quadratino e un ostacolo) si toccano 
+o si sovrappongono nello spazio. Gestiamo le collisioni confrontando le coordinate 
+dei bordi degli oggetti.
+
+\textbf{Color}: Tipo di dato che rappresenta un colore. C\# offre colori predefiniti 
+come \texttt{Color.Red}, \texttt{Color.Blue}, oppure possiamo crearne di personalizzati 
+con \texttt{Color.FromArgb(rosso, verde, blu)}.
+
+\textbf{Component Tray}: La zona grigia sotto la Form nel designer di Visual Studio 
+dove appaiono i componenti non visibili (come il Timer).
+
+\textbf{Costruttore}: Un metodo speciale che viene eseguito automaticamente quando 
+creiamo un nuovo oggetto. Ha lo stesso nome della classe e serve per inizializzare 
+le proprietà. Esempio: \texttt{public Quadratino(int x, int y) \{ ... \}}.
+
+\textbf{Controllo}: Un elemento visuale dell'interfaccia grafica (Button, Label, 
+TextBox, ecc.) che l'utente può vedere e con cui può interagire.
+
+\textbf{Coordinate}: Numeri che indicano la posizione di un punto sullo schermo. 
+Usiamo \textbf{X} per la posizione orizzontale (da sinistra a destra) e \textbf{Y} 
+per quella verticale (dall'alto in basso).
+
+\textbf{Count}: Proprietà di una Lista che restituisce il numero di elementi contenuti. 
+Esempio: \texttt{if (quadratini.Count > 10)} controlla se ci sono più di 10 quadratini.
+
+\subsection*{D}
+
+\textbf{DataSource}: Proprietà usata per collegare una Lista a un controllo visuale 
+come la ListBox, mostrando automaticamente tutti gli elementi contenuti.
+
+\textbf{Dimensione}: Grandezza di un oggetto, misurata in pixel. Per un quadrato, 
+la dimensione rappresenta la lunghezza del lato.
+
+\subsection*{E}
+
+\textbf{Enabled}: Proprietà booleana (\texttt{true}/\texttt{false}) che attiva o 
+disattiva un controllo. Per il Timer, \texttt{Enabled = true} lo fa partire, 
+\texttt{Enabled = false} lo ferma.
+
+\textbf{Evento}: Un'azione che accade durante l'esecuzione del programma (come un 
+click del mouse o la pressione di un tasto). Gli eventi permettono al programma 
+di reagire alle azioni dell'utente.
+
+\subsection*{F}
+
+\textbf{false}: Valore booleano che indica "falso" o "no". Usato nelle condizioni 
+e per disattivare proprietà.
+
+\textbf{for (ciclo)}: Struttura che ripete un blocco di codice un numero specifico 
+di volte. Sintassi: \texttt{for (inizializzazione; condizione; incremento) \{ ... \}}.
+
+\textbf{foreach (ciclo)}: Ciclo che scorre automaticamente tutti gli elementi di 
+una collezione (come una Lista). Sintassi: \texttt{foreach (Tipo elemento in collezione) \{ ... \}}.
+
+\textbf{Form}: La finestra principale di un'applicazione Windows Forms. È il contenitore 
+che ospita tutti gli altri controlli (pulsanti, etichette, immagini, ecc.).
+
+\textbf{Form1\_Load}: Evento che si attiva una sola volta, quando la Form viene 
+caricata all'avvio del programma. Utile per inizializzare variabili e preparare 
+l'interfaccia.
+
+\textbf{Funzione}: Vedi \textit{Metodo}.
+
+\subsection*{G}
+
+\textbf{Graphics}: Classe che fornisce metodi avanzati per disegnare (linee, 
+rettangoli, ellissi). Usiamo \texttt{Graphics.FromImage(bitmap)} per ottenere 
+un oggetto Graphics da una Bitmap. Il metodo \texttt{Clear()} riempie l'intera 
+immagine di un colore.
+
+\textbf{GUI (Graphical User Interface)}: Interfaccia Grafica Utente. È il modo 
+in cui l'utente interagisce con il programma attraverso finestre, pulsanti e 
+altri elementi visuali, invece di scrivere comandi testuali.
+
+\subsection*{H}
+
+\textbf{Height}: Proprietà che indica l'altezza di un controllo o di un'immagine, 
+misurata in pixel.
+
+\subsection*{I}
+
+\textbf{IDE (Integrated Development Environment)}: Ambiente di Sviluppo Integrato. 
+Visual Studio è un IDE che ci fornisce tutti gli strumenti per scrivere, testare 
+e pubblicare programmi.
+
+\textbf{if (condizione)}: Struttura che esegue un blocco di codice solo se una 
+condizione è vera. Sintassi: \texttt{if (condizione) \{ ... \} else \{ ... \}}.
+
+\textbf{Image}: Proprietà della PictureBox che contiene l'immagine da visualizzare. 
+Assegnando una Bitmap a questa proprietà, la mostriamo sullo schermo.
+
+\textbf{Indice}: Numero che indica la posizione di un elemento in una Lista o Array. 
+\textbf{Attenzione}: il computer inizia a contare da 0! Il primo elemento ha indice 0, 
+il secondo ha indice 1, e così via.
+
+\textbf{InitializeComponent()}: Metodo automatico che inizializza tutti i controlli 
+della Form. Non va modificato manualmente, viene gestito da Visual Studio.
+
+\textbf{int}: Tipo di dato che rappresenta un numero intero (senza decimali). 
+Esempio: \texttt{int x = 10;}.
+
+\textbf{Interval}: Proprietà del Timer che indica ogni quanti millisecondi (ms) 
+scatta l'evento Tick. Esempio: \texttt{Interval = 20} significa 50 volte al secondo 
+(1000ms ÷ 20 = 50).
+
+\textbf{Istanza}: Un oggetto concreto creato da una classe. Esempio: \texttt{q1} 
+e \texttt{q2} sono due istanze diverse della classe \texttt{Quadratino}.
+
+\subsection*{K}
+
+\textbf{KeyCode}: Proprietà dell'evento \texttt{KeyDown} che indica quale tasto 
+è stato premuto. Esempi: \texttt{Keys.Up}, \texttt{Keys.Down}, \texttt{Keys.Left}, 
+\texttt{Keys.Right}.
+
+\textbf{KeyDown (evento)}: Si attiva quando l'utente preme un tasto sulla tastiera. 
+Utile per controllare i movimenti in un gioco.
+
+\textbf{KeyPreview}: Proprietà booleana della Form. Se impostata su \texttt{true}, 
+la Form "intercetta" tutti i tasti premuti prima che arrivino ai controlli al suo interno.
+
+\textbf{Keys}: Enumerazione che contiene tutti i codici dei tasti della tastiera. 
+Usata con l'evento KeyDown per riconoscere quale tasto è stato premuto.
+
+\subsection*{L}
+
+\textbf{Label (etichetta)}: Controllo che mostra un testo fisso sullo schermo. 
+L'utente non può modificarlo direttamente, ma possiamo cambiarlo nel codice 
+tramite la proprietà \texttt{Text}.
+
+\textbf{List<T>}: Collezione dinamica che può contenere un numero variabile di 
+elementi dello stesso tipo. Esempio: \texttt{List<Quadratino>} può contenere 
+tanti quadratini. Si può espandere o ridurre con \texttt{Add()} e \texttt{Remove()}.
+
+\textbf{ListBox}: Controllo che mostra una lista di elementi a schermo. L'utente 
+può scorrere e selezionare elementi dalla lista.
+
+\textbf{Load (evento)}: Vedi \textit{Form1\_Load}.
+
+\textbf{Location}: Proprietà che indica la posizione di un controllo sulla Form, 
+espressa come coordinate X e Y.
+
+\subsection*{M}
+
+\textbf{MessageBox.Show()}: Metodo che mostra una finestra di dialogo con un 
+messaggio. Utile per comunicare informazioni all'utente o per fare debugging.
+
+\textbf{Metodo}: Un'azione che un oggetto può compiere. È un blocco di codice 
+con un nome che possiamo "chiamare" per eseguirlo. Esempio: \texttt{DisegnaPunto()} 
+è un metodo che disegna un punto sullo schermo.
+
+\textbf{Millisecondi (ms)}: Millesimi di secondo. Usati per misurare l'Interval 
+del Timer. 1000 ms = 1 secondo.
+
+\subsection*{N}
+
+\textbf{Name}: Proprietà che assegna un nome identificativo a un controllo. 
+È consigliato usare nomi descrittivi come \texttt{btnInizia} invece di 
+\texttt{button1}.
+
+\textbf{new}: Parola chiave usata per creare un nuovo oggetto da una classe. 
+Esempio: \texttt{Quadratino q = new Quadratino(10, 20, 2, 3, 15, Color.Red);}.
+
+\textbf{null}: Valore speciale che indica "nessun oggetto" o "vuoto". Esempio: 
+\texttt{if (o1 != null)} controlla se l'ostacolo esiste prima di usarlo.
+
+\subsection*{O}
+
+\textbf{Oggetto}: Un'entità concreta creata da una classe, con proprietà e metodi 
+propri. Esempio: \texttt{q1} è un oggetto della classe \texttt{Quadratino}.
+
+\textbf{Ostacolo}: Nel nostro progetto, un rettangolo fisso contro cui i quadratini 
+possono rimbalzare. Definito dalla classe \texttt{Ostacolo} con coordinate degli 
+angoli opposti.
+
+\subsection*{P}
+
+\textbf{Parametro}: Un valore che passiamo a un metodo quando lo chiamiamo. 
+Esempio: in \texttt{disegnaPunto(100, 200)}, i numeri 100 e 200 sono parametri 
+che indicano dove disegnare.
+
+\textbf{PictureBox}: Controllo che può contenere e mostrare immagini. Nel nostro 
+caso, lo usiamo come "tela" per disegnare animazioni pixel per pixel.
+
+\textbf{Pixel}: Il più piccolo punto colorabile sullo schermo. Le immagini digitali 
+sono composte da migliaia di pixel disposti in una griglia.
+
+\textbf{Posizione}: Le coordinate (X, Y) che indicano dove si trova un oggetto 
+sullo schermo o nell'area di disegno.
+
+\textbf{private}: Parola chiave che indica che un metodo o una variabile è 
+accessibile solo all'interno della classe in cui è dichiarato. Serve per proteggere 
+il codice.
+
+\textbf{Proprietà}: Una caratteristica di un oggetto (come il colore, la posizione, 
+la dimensione). In C\#, le proprietà sono variabili dichiarate dentro una classe.
+
+\textbf{public}: Parola chiave che indica che un metodo, una proprietà o una classe 
+è accessibile da qualsiasi parte del programma.
+
+\subsection*{R}
+
+\textbf{Random}: Classe che genera numeri casuali. Esempio: 
+\texttt{Random rnd = new Random(); int numero = rnd.Next(1, 101);} genera un 
+numero tra 1 e 100.
+
+\textbf{Refresh()}: Metodo che forza un controllo ad aggiornarsi immediatamente, 
+ridisegnandosi sullo schermo.
+
+\textbf{Remove}: Metodo che rimuove un elemento da una Lista. Esempio: 
+\texttt{nomi.Remove("Mario");} toglie "Mario" dalla lista.
+
+\textbf{return}: Parola chiave che termina l'esecuzione di un metodo e, 
+opzionalmente, restituisce un valore. Esempio: \texttt{return x + y;}.
+
+\textbf{Rimbalzo}: Cambio di direzione di un oggetto in movimento quando tocca 
+un bordo o un ostacolo. Si ottiene invertendo il segno della velocità: 
+\texttt{vx = -vx}.
+
+\subsection*{S}
+
+\textbf{SetPixel}: Metodo della classe Bitmap che colora un singolo pixel in una 
+posizione specifica. Sintassi: \texttt{bitmap.SetPixel(x, y, colore)}.
+
+\textbf{Size}: Proprietà che indica la dimensione (larghezza e altezza) di un 
+controllo o di un'immagine.
+
+\textbf{string}: Tipo di dato che rappresenta una stringa di testo. Esempio: 
+\texttt{string nome = "Mario";}.
+
+\textbf{switch}: Struttura di controllo che esegue blocchi di codice diversi in 
+base al valore di una variabile. Più elegante di tanti \texttt{if-else} consecutivi.
+
+\subsection*{T}
+
+\textbf{Text}: Proprietà che contiene il testo visualizzato in un controllo 
+(Label, Button, TextBox, Form). Possiamo leggerla e modificarla nel codice.
+
+\textbf{TextBox}: Controllo che permette all'utente di inserire testo. La proprietà 
+\texttt{Text} contiene quello che l'utente ha scritto.
+
+\textbf{this}: Parola chiave che si riferisce all'oggetto corrente. In una Form, 
+\texttt{this} indica la Form stessa. Esempio: \texttt{this.BackColor = Color.Red;}.
+
+\textbf{Tick (evento)}: Evento del Timer che si attiva periodicamente secondo 
+l'intervallo impostato. È il "battito" del Timer, usato per creare animazioni.
+
+\textbf{Timer}: Componente che genera eventi ripetuti a intervalli regolari. 
+Fondamentale per creare animazioni e giochi.
+
+\textbf{Toolbox}: La finestra di Visual Studio (di solito a sinistra) che contiene 
+tutti i controlli che possiamo trascinare sulla Form.
+
+\textbf{true}: Valore booleano che indica "vero" o "sì". Usato nelle condizioni 
+e per attivare proprietà.
+
+\subsection*{U}
+
+\textbf{using}: Può avere due significati:
+\begin{enumerate}
+    \item All'inizio del file: importa uno spazio dei nomi (namespace) per 
+          usare le sue classi. Esempio: \texttt{using System.Drawing;}.
+    \item Nel codice: gestisce automaticamente la pulizia di risorse. Esempio: 
+          \texttt{using (Graphics g = ...) \{ ... \}} chiude automaticamente 
+          l'oggetto Graphics.
+\end{enumerate}
+
+\subsection*{V}
+
+\textbf{Variabile}: Un contenitore con un nome che conserva un valore. Può essere 
+modificata durante l'esecuzione del programma. Esempio: \texttt{int x = 10;}.
+
+\textbf{Variabile Globale (o di Classe)}: Variabile dichiarata fuori dai metodi, 
+accessibile da tutta la classe. Mantiene il suo valore per tutta la durata del 
+programma.
+
+\textbf{Variabile Locale}: Variabile dichiarata dentro un metodo, accessibile solo 
+in quel metodo. Viene distrutta quando il metodo termina.
+
+\textbf{Velocità}: Nel nostro progetto, indica di quanti pixel si sposta un oggetto 
+a ogni aggiornamento. Usiamo \texttt{vx} per la velocità orizzontale e \texttt{vy} 
+per quella verticale.
+
+\textbf{void}: Parola chiave che indica che un metodo non restituisce nessun valore. 
+Esempio: \texttt{private void DisegnaPunto() \{ ... \}}.
+
+\subsection*{W}
+
+\textbf{Width}: Proprietà che indica la larghezza di un controllo o di un'immagine, 
+misurata in pixel.
+
+\textbf{WinForms (Windows Forms)}: Tecnologia di Microsoft per creare applicazioni 
+desktop con interfaccia grafica per Windows.
+
+\subsection*{X, Y, Z}
+
+\textbf{X (coordinata)}: Posizione orizzontale di un punto, misurata in pixel da 
+sinistra (valore 0) verso destra.
+
+\textbf{Y (coordinata)}: Posizione verticale di un punto, misurata in pixel dall'alto 
+(valore 0) verso il basso.
+
+\begin{consiglio}
+\textbf{Come usare questo glossario:}
+
+\begin{itemize}
+    \item Quando incontri un termine che non conosci nel codice, cerca qui la 
+          sua definizione.
+    \item Rileggi le definizioni periodicamente per consolidare la tua comprensione.
+    \item Prova a spiegare ogni termine con parole tue: è il modo migliore per 
+          verificare di averlo capito!
+    \item I termini in \textit{corsivo} rimandano ad altre voci del glossario.
+\end{itemize}
+\end{consiglio}
+
 \begin{center}
 {\Large\textit{Ora sei pronto per creare i tuoi primi giochi e applicazioni interattive!}}
 
