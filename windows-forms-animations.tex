@@ -1,0 +1,554 @@
+\documentclass[a4paper,12pt]{article}
+
+% Pacchetti necessari
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+
+% Impostazioni pagina
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Configurazione listings per C#
+\lstdefinestyle{csharp}{
+    language=[Sharp]C,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black}\itshape,
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    tabsize=4,
+    breaklines=true,
+    captionpos=b,
+    showstringspaces=false
+}
+
+% Header e footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Dispensa Windows Forms}
+\rhead{Animazioni Semplici}
+\cfoot{\thepage}
+
+% Informazioni documento
+\title{\textbf{Programmazione Windows Forms\\Animazioni Semplici}}
+\author{Dispensa di Programmazione}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ====================================
+\section{Introduzione a Windows Forms}
+% ====================================
+
+Windows Forms è una tecnologia di Microsoft per la creazione di applicazioni desktop con interfaccia grafica (GUI) utilizzando il framework .NET. Permette di creare interfacce utente ricche e interattive attraverso controlli visuali come pulsanti, etichette, caselle di testo e molto altro.
+
+\subsection{Caratteristiche principali}
+\begin{itemize}
+    \item \textbf{Event-Driven}: basato su eventi (click, movimento mouse, timer, etc.)
+    \item \textbf{Designer visuale}: permette di progettare l'interfaccia trascinando controlli
+    \item \textbf{Ricca libreria di controlli}: button, label, textbox, picturebox, etc.
+    \item \textbf{Grafica GDI+}: per disegni personalizzati e animazioni
+\end{itemize}
+
+\subsection{Creazione di un progetto base}
+Per creare un progetto Windows Forms in Visual Studio:
+\begin{enumerate}
+    \item Apri Visual Studio
+    \item File → Nuovo → Progetto
+    \item Seleziona "Windows Forms App (.NET Framework)" o "Windows Forms App"
+    \item Assegna un nome al progetto
+    \item Clicca su "Crea"
+\end{enumerate}
+
+% ====================================
+\section{Fondamenti delle Animazioni}
+% ====================================
+
+Un'animazione è una sequenza di immagini o modifiche grafiche che creano l'illusione del movimento. In Windows Forms, le animazioni si basano principalmente su:
+
+\begin{itemize}
+    \item \textbf{Timer}: per eseguire codice ad intervalli regolari
+    \item \textbf{Invalidate/Refresh}: per ridisegnare i controlli
+    \item \textbf{GDI+}: per disegnare forme e immagini
+    \item \textbf{Proprietà degli oggetti}: posizione, dimensione, colore
+\end{itemize}
+
+\subsection{Il ciclo di animazione}
+Ogni animazione segue questo pattern:
+\begin{enumerate}
+    \item \textbf{Inizializzazione}: imposta lo stato iniziale
+    \item \textbf{Aggiornamento}: modifica le proprietà (posizione, colore, etc.)
+    \item \textbf{Rendering}: ridisegna l'interfaccia
+    \item \textbf{Ripetizione}: torna al punto 2
+\end{enumerate}
+
+% ====================================
+\section{Il Controllo Timer}
+% ====================================
+
+Il controllo \texttt{Timer} è fondamentale per le animazioni. Genera eventi ad intervalli regolari, permettendo di aggiornare l'interfaccia periodicamente.
+
+\subsection{Proprietà principali}
+\begin{itemize}
+    \item \textbf{Interval}: tempo in millisecondi tra un evento e l'altro (es. 20ms = 50 FPS)
+    \item \textbf{Enabled}: attiva/disattiva il timer (true/false)
+\end{itemize}
+
+\subsection{Esempio: Palla che rimbalza}
+
+Creiamo una semplice animazione di una palla che rimbalza sullo schermo.
+
+\lstset{style=csharp}
+\begin{lstlisting}[caption={Form con palla rimbalzante}]
+public partial class Form1 : Form
+{
+    // Posizione e velocità della palla
+    private float ballX = 50;
+    private float ballY = 50;
+    private float speedX = 5;
+    private float speedY = 5;
+    private int ballSize = 30;
+    
+    public Form1()
+    {
+        InitializeComponent();
+        
+        // Configurazione timer
+        Timer timer = new Timer();
+        timer.Interval = 20; // 50 FPS
+        timer.Tick += Timer_Tick;
+        timer.Start();
+        
+        // Attiva double buffering per ridurre flickering
+        this.DoubleBuffered = true;
+    }
+    
+    private void Timer_Tick(object sender, EventArgs e)
+    {
+        // Aggiorna posizione
+        ballX += speedX;
+        ballY += speedY;
+        
+        // Rimbalzo sui bordi
+        if (ballX < 0 || ballX > this.ClientSize.Width - ballSize)
+            speedX = -speedX;
+        
+        if (ballY < 0 || ballY > this.ClientSize.Height - ballSize)
+            speedY = -speedY;
+        
+        // Ridisegna il form
+        this.Invalidate();
+    }
+    
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        
+        // Disegna la palla
+        Graphics g = e.Graphics;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        g.FillEllipse(Brushes.Red, ballX, ballY, ballSize, ballSize);
+    }
+}
+\end{lstlisting}
+
+\subsection{Spiegazione del codice}
+\begin{enumerate}
+    \item \textbf{Variabili di stato}: memorizziamo posizione (ballX, ballY) e velocità (speedX, speedY)
+    \item \textbf{Timer.Tick}: evento chiamato ogni 20ms
+    \item \textbf{Aggiornamento}: modifichiamo la posizione sommando la velocità
+    \item \textbf{Collisioni}: invertiamo la velocità quando tocchiamo i bordi
+    \item \textbf{Invalidate()}: forza il ridisegno chiamando OnPaint
+    \item \textbf{OnPaint}: disegna la palla nella nuova posizione
+    \item \textbf{DoubleBuffered}: elimina lo sfarfallio
+\end{enumerate}
+
+% ====================================
+\section{Animazioni con Controlli}
+% ====================================
+
+Possiamo animare anche i controlli standard modificando le loro proprietà.
+
+\subsection{Esempio: Pulsante che si muove}
+
+\begin{lstlisting}[caption={Pulsante animato}]
+public partial class Form1 : Form
+{
+    private Button btnMoving;
+    private int direction = 1;
+    
+    public Form1()
+    {
+        InitializeComponent();
+        
+        // Crea pulsante
+        btnMoving = new Button();
+        btnMoving.Text = "Prendimi!";
+        btnMoving.Size = new Size(100, 40);
+        btnMoving.Location = new Point(50, 50);
+        this.Controls.Add(btnMoving);
+        
+        // Timer per animazione
+        Timer timer = new Timer();
+        timer.Interval = 30;
+        timer.Tick += (s, e) => {
+            btnMoving.Left += 3 * direction;
+            
+            if (btnMoving.Left > this.ClientSize.Width - btnMoving.Width || 
+                btnMoving.Left < 0)
+                direction = -direction;
+        };
+        timer.Start();
+    }
+}
+\end{lstlisting}
+
+\subsection{Esempio: Dissolvenza (Fade In/Out)}
+
+\begin{lstlisting}[caption={Effetto fade su una label}]
+public partial class Form1 : Form
+{
+    private Label lblFade;
+    private int alpha = 0;
+    private int fadeDirection = 5;
+    
+    public Form1()
+    {
+        InitializeComponent();
+        
+        lblFade = new Label();
+        lblFade.Text = "Testo in dissolvenza";
+        lblFade.Font = new Font("Arial", 20, FontStyle.Bold);
+        lblFade.AutoSize = true;
+        lblFade.Location = new Point(100, 100);
+        this.Controls.Add(lblFade);
+        
+        Timer timer = new Timer();
+        timer.Interval = 50;
+        timer.Tick += Timer_Fade_Tick;
+        timer.Start();
+    }
+    
+    private void Timer_Fade_Tick(object sender, EventArgs e)
+    {
+        alpha += fadeDirection;
+        
+        // Inverti direzione ai limiti
+        if (alpha >= 255 || alpha <= 0)
+            fadeDirection = -fadeDirection;
+        
+        // Assicura che alpha sia nei limiti
+        alpha = Math.Max(0, Math.Min(255, alpha));
+        
+        // Applica il colore con trasparenza
+        lblFade.ForeColor = Color.FromArgb(alpha, Color.Blue);
+    }
+}
+\end{lstlisting}
+
+% ====================================
+\section{Grafica Avanzata con GDI+}
+% ====================================
+
+GDI+ (Graphics Device Interface) è la libreria grafica di Windows Forms che permette di disegnare forme, linee, testo e immagini.
+
+\subsection{Oggetti Graphics principali}
+\begin{itemize}
+    \item \textbf{Graphics}: superficie di disegno
+    \item \textbf{Pen}: per disegnare linee e contorni
+    \item \textbf{Brush}: per riempire forme (SolidBrush, LinearGradientBrush, etc.)
+    \item \textbf{Font}: per scrivere testo
+\end{itemize}
+
+\subsection{Esempio: Orologio analogico animato}
+
+\begin{lstlisting}[caption={Orologio analogico con lancette animate}]
+public partial class Form1 : Form
+{
+    public Form1()
+    {
+        InitializeComponent();
+        this.Size = new Size(400, 400);
+        this.DoubleBuffered = true;
+        
+        Timer timer = new Timer();
+        timer.Interval = 1000; // Aggiorna ogni secondo
+        timer.Tick += (s, e) => this.Invalidate();
+        timer.Start();
+    }
+    
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        Graphics g = e.Graphics;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        
+        // Centro del form
+        int centerX = this.ClientSize.Width / 2;
+        int centerY = this.ClientSize.Height / 2;
+        int radius = 150;
+        
+        // Disegna cerchio esterno
+        g.DrawEllipse(new Pen(Color.Black, 3), 
+            centerX - radius, centerY - radius, 
+            radius * 2, radius * 2);
+        
+        // Ora corrente
+        DateTime now = DateTime.Now;
+        
+        // Angoli (in gradi, 0 = ore 12)
+        double secondAngle = (now.Second * 6) - 90; // 6° per secondo
+        double minuteAngle = (now.Minute * 6 + now.Second * 0.1) - 90;
+        double hourAngle = (now.Hour % 12 * 30 + now.Minute * 0.5) - 90;
+        
+        // Converti in radianti
+        double secRad = secondAngle * Math.PI / 180;
+        double minRad = minuteAngle * Math.PI / 180;
+        double hourRad = hourAngle * Math.PI / 180;
+        
+        // Disegna lancetta dei secondi (rossa)
+        int secLength = radius - 20;
+        g.DrawLine(new Pen(Color.Red, 2), 
+            centerX, centerY,
+            centerX + (int)(secLength * Math.Cos(secRad)),
+            centerY + (int)(secLength * Math.Sin(secRad)));
+        
+        // Disegna lancetta dei minuti (blu)
+        int minLength = radius - 40;
+        g.DrawLine(new Pen(Color.Blue, 4), 
+            centerX, centerY,
+            centerX + (int)(minLength * Math.Cos(minRad)),
+            centerY + (int)(minLength * Math.Sin(minRad)));
+        
+        // Disegna lancetta delle ore (nera)
+        int hourLength = radius - 60;
+        g.DrawLine(new Pen(Color.Black, 6), 
+            centerX, centerY,
+            centerX + (int)(hourLength * Math.Cos(hourRad)),
+            centerY + (int)(hourLength * Math.Sin(hourRad)));
+        
+        // Centro
+        g.FillEllipse(Brushes.Black, centerX - 5, centerY - 5, 10, 10);
+        
+        // Ore sul quadrante
+        Font font = new Font("Arial", 16, FontStyle.Bold);
+        for (int i = 1; i <= 12; i++)
+        {
+            double angle = (i * 30 - 90) * Math.PI / 180;
+            int numRadius = radius - 30;
+            int x = centerX + (int)(numRadius * Math.Cos(angle));
+            int y = centerY + (int)(numRadius * Math.Sin(angle));
+            
+            string number = i.ToString();
+            SizeF size = g.MeasureString(number, font);
+            g.DrawString(number, font, Brushes.Black, 
+                x - size.Width / 2, y - size.Height / 2);
+        }
+    }
+}
+\end{lstlisting}
+
+% ====================================
+\section{Animazioni con Immagini}
+% ====================================
+
+\subsection{Sprite Animation}
+Lo sprite animation utilizza una sequenza di immagini (frames) mostrate in rapida successione.
+
+\begin{lstlisting}[caption={Animazione sprite semplice}]
+public partial class Form1 : Form
+{
+    private Image[] sprites; // Array di immagini
+    private int currentFrame = 0;
+    private PictureBox pictureBox;
+    
+    public Form1()
+    {
+        InitializeComponent();
+        
+        // Carica le immagini (esempio con 4 frame)
+        sprites = new Image[]
+        {
+            Image.FromFile("sprite1.png"),
+            Image.FromFile("sprite2.png"),
+            Image.FromFile("sprite3.png"),
+            Image.FromFile("sprite4.png")
+        };
+        
+        pictureBox = new PictureBox();
+        pictureBox.Size = new Size(100, 100);
+        pictureBox.Location = new Point(100, 100);
+        pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+        this.Controls.Add(pictureBox);
+        
+        Timer timer = new Timer();
+        timer.Interval = 100; // Cambia frame ogni 100ms
+        timer.Tick += Timer_Sprite_Tick;
+        timer.Start();
+    }
+    
+    private void Timer_Sprite_Tick(object sender, EventArgs e)
+    {
+        // Cicla tra i frame
+        currentFrame = (currentFrame + 1) % sprites.Length;
+        pictureBox.Image = sprites[currentFrame];
+    }
+}
+\end{lstlisting}
+
+% ====================================
+\section{Ottimizzazioni e Best Practices}
+% ====================================
+
+\subsection{Double Buffering}
+Previene lo sfarfallio (flickering) ridisegnando prima su un buffer in memoria.
+
+\begin{lstlisting}
+// Nel costruttore del form
+this.DoubleBuffered = true;
+\end{lstlisting}
+
+\subsection{Gestione delle risorse}
+\begin{itemize}
+    \item Usa \texttt{using} per oggetti Graphics, Pen, Brush
+    \item Rilascia le immagini quando non servono più
+    \item Evita di creare nuovi oggetti ad ogni frame
+\end{itemize}
+
+\begin{lstlisting}[caption={Gestione corretta delle risorse}]
+// Buona pratica: riutilizza gli oggetti
+private Pen myPen = new Pen(Color.Blue, 2);
+private SolidBrush myBrush = new SolidBrush(Color.Red);
+
+protected override void OnPaint(PaintEventArgs e)
+{
+    base.OnPaint(e);
+    // Usa myPen e myBrush senza ricrearli
+    e.Graphics.DrawEllipse(myPen, 10, 10, 50, 50);
+}
+
+// Rilascia nel dispose
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        myPen?.Dispose();
+        myBrush?.Dispose();
+    }
+    base.Dispose(disposing);
+}
+\end{lstlisting}
+
+\subsection{Frame Rate}
+\begin{itemize}
+    \item 30-60 FPS è ideale per animazioni fluide
+    \item Timer.Interval = 16-33ms (60-30 FPS)
+    \item Usa \texttt{Stopwatch} per animazioni precise basate sul tempo
+\end{itemize}
+
+% ====================================
+\section{Esercizi Pratici}
+% ====================================
+
+\subsection{Esercizio 1: Semaforo Animato}
+Crea un semaforo con tre cerchi (rosso, giallo, verde) che si accendono in sequenza.
+
+\textbf{Requisiti:}
+\begin{itemize}
+    \item Usa GDI+ per disegnare i cerchi
+    \item Rosso: 3 secondi
+    \item Giallo: 1 secondo
+    \item Verde: 3 secondi
+    \item Loop continuo
+\end{itemize}
+
+\subsection{Esercizio 2: Snake Game Semplice}
+Crea un serpente che si muove sullo schermo controllato dalle frecce.
+
+\textbf{Requisiti:}
+\begin{itemize}
+    \item Griglia 20x20 celle
+    \item Serpente formato da quadrati
+    \item Direzione controllata da tastiera
+    \item Aggiungi un "cibo" che fa crescere il serpente
+\end{itemize}
+
+\subsection{Esercizio 3: Barra di Caricamento Animata}
+Crea una progress bar personalizzata con animazione.
+
+\textbf{Requisiti:}
+\begin{itemize}
+    \item Barra che si riempie da 0 a 100\%
+    \item Gradiente di colore
+    \item Testo percentuale centrato
+    \item Effetto "pulsante" o brillante
+\end{itemize}
+
+\subsection{Esercizio 4: Pioggia di Particelle}
+Simula la pioggia con particelle che cadono dall'alto.
+
+\textbf{Requisiti:}
+\begin{itemize}
+    \item 50-100 particelle
+    \item Velocità casuale
+    \item Quando raggiunge il fondo, riappare in alto
+    \item Bonus: aggiungi vento (movimento orizzontale)
+\end{itemize}
+
+% ====================================
+\section{Risorse Aggiuntive}
+% ====================================
+
+\subsection{Documentazione Microsoft}
+\begin{itemize}
+    \item Windows Forms: \url{https://docs.microsoft.com/dotnet/desktop/winforms/}
+    \item GDI+: \url{https://docs.microsoft.com/dotnet/api/system.drawing}
+    \item Timer: \url{https://docs.microsoft.com/dotnet/api/system.windows.forms.timer}
+\end{itemize}
+
+\subsection{Concetti da approfondire}
+\begin{itemize}
+    \item \textbf{Game Loop}: pattern per giochi e animazioni complesse
+    \item \textbf{Interpolazione}: per animazioni fluide tra stati
+    \item \textbf{Easing Functions}: accelerazione/decelerazione naturale
+    \item \textbf{Collision Detection}: rilevamento collisioni tra oggetti
+    \item \textbf{Particle Systems}: sistemi di particelle avanzati
+\end{itemize}
+
+% ====================================
+\section{Conclusioni}
+% ====================================
+
+Le animazioni in Windows Forms si basano su concetti semplici:
+\begin{enumerate}
+    \item \textbf{Timer} per aggiornamenti periodici
+    \item \textbf{Stato} delle variabili (posizione, velocità, colore)
+    \item \textbf{Rendering} con OnPaint o modifica proprietà controlli
+    \item \textbf{Ottimizzazione} con double buffering e gestione risorse
+\end{enumerate}
+
+Con questi strumenti puoi creare interfacce interattive e coinvolgenti. Sperimenta con gli esercizi proposti e esplora le infinite possibilità di GDI+!
+
+\vspace{1cm}
+\hrule
+\vspace{0.5cm}
+\begin{center}
+\textit{Buona programmazione!}
+\end{center}
+
+\end{document}
