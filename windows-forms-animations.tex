@@ -1096,10 +1096,6 @@ Vogliamo che il nostro quadratino si muova quando premiamo le frecce della tasti
 
 \subsection{Configurazione Iniziale}
 
-Per far sì che la finestra "senta" i tasti, dobbiamo attivare una proprietà speciale della Form chiamata \texttt{KeyPreview = true;}.
-
-\subsection{Configurazione Iniziale}
-
 Per far sì che la finestra "senta" i tasti della tastiera, dobbiamo 
 attivare una proprietà speciale della Form chiamata \texttt{KeyPreview}.
 
@@ -1791,31 +1787,6 @@ public void controllaCollisioneOstacoli(
         {
             q.vx = -q.vx; // Rimbalza!
         }
-    }
-}
-\end{lstlisting}
-
-\subsubsection{Il Codice della Classe Ostacolo}
-
-Ecco come definiamo la classe Ostacolo nel nostro progetto:
-
-\begin{lstlisting}[caption={Classe Ostacolo}]
-public class Ostacolo
-{
-    // Le coordinate dell'ostacolo
-    public int x0, y0; // Angolo in alto a sinistra
-    public int x1, y1; // Angolo in basso a destra
-    public Color colore; // Il colore del rettangolo
-    
-    // Il costruttore: come nasce l'ostacolo
-    public Ostacolo(int inizioX, int inizioY, 
-                    int fineX, int fineY)
-    {
-        x0 = inizioX;
-        y0 = inizioY;
-        x1 = fineX;
-        y1 = fineY;
-        colore = Color.Gray;
     }
 }
 \end{lstlisting}
