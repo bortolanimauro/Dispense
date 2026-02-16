@@ -1,4 +1,4 @@
-\documentclass[14pt,a4paper]{extarticle}
+\documentclass[12pt,a4paper]{extarticle}
 
 % ====================================
 % PACCHETTI PER ACCESSIBILITA'
@@ -120,6 +120,30 @@
 \fancyhead[R]{\textsf{C\#}}
 \fancyfoot[C]{\Large\thepage}
 \renewcommand{\headrulewidth}{0.5pt}
+
+% ====================================
+% PREVENZIONE VEDOVE NEI TITOLI
+% ====================================
+
+% Pacchetto per migliorare la micro-tipografia
+\usepackage{microtype}
+
+% Permette ai titoli di essere più flessibili nella spaziatura
+\usepackage{ragged2e}
+
+% Modifica i titoli per usare RaggedRight (con sillabazione)
+\titleformat{\section}
+  {\normalfont\LARGE\bfseries\RaggedRight}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+\titleformat{\subsection}
+  {\normalfont\Large\bfseries\RaggedRight}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\titleformat{\subsubsection}
+  {\normalfont\large\bfseries\RaggedRight}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
 
 % Informazioni documento
 \title{\textbf{\Huge Programmare con C\# e\\le Windows Forms\\[0.5em]\LARGE Animazioni e Grafica Interattiva}}
@@ -599,6 +623,77 @@ bmp.SetPixel(10, 20, Color.Red);
 pictureBox1.Image = bmp;
 \end{lstlisting}
 
+\subsection{I Cicli: Ripetere un'azione tante volte}
+
+Prima di disegnare un quadrato completo, dobbiamo capire come dire 
+al computer di ripetere un'azione molte volte. Per questo usiamo 
+il \textbf{ciclo for}.
+
+\subsubsection{Il ciclo for semplice}
+
+Un ciclo for serve a contare da un numero all'altro:
+
+\begin{lstlisting}[caption={Esempio di ciclo for}]
+for (int i = 0; i < 10; i++)
+{
+    // Questo codice si ripete 10 volte
+    // i vale: 0, poi 1, poi 2... fino a 9
+}
+\end{lstlisting}
+
+\textbf{Spiegazione:}
+\begin{itemize}
+    \item \texttt{int i = 0} - Parte da 0
+    \item \texttt{i < 10} - Continua finché i è minore di 10
+    \item \texttt{i++} - Dopo ogni giro, aumenta i di 1
+\end{itemize}
+
+\subsubsection{Cicli annidati: La griglia}
+
+Per colorare un quadrato, abbiamo bisogno di colorare tanti pixel 
+in una griglia. Immagina una scacchiera: dobbiamo riempire tutte 
+le caselle una per una.
+
+Per farlo usiamo \textbf{due cicli, uno dentro l'altro}:
+
+\begin{enumerate}
+    \item Un ciclo che scorre le \textbf{colonne} (coordinate X da sinistra a destra)
+    \item Un ciclo che scorre le \textbf{righe} (coordinate Y dall'alto in basso)
+\end{enumerate}
+
+\begin{lstlisting}[caption={Esempio di cicli annidati}]
+// Ciclo esterno: scorre le colonne (asse X)
+for (int x = 0; x < 10; x++)
+{
+    // Ciclo interno: scorre le righe (asse Y)
+    for (int y = 0; y < 10; y++)
+    {
+        // Questo codice si esegue 10 x 10 = 100 volte!
+        // Colora il pixel nella posizione (x, y)
+        foglio.SetPixel(x, y, Color.Red);
+    }
+}
+\end{lstlisting}
+
+\textbf{Come funziona:}
+\begin{itemize}
+    \item Quando \texttt{x=0}, il ciclo interno colora tutti i punti 
+          da \texttt{y=0} a \texttt{y=9} (una colonna verticale)
+    \item Poi \texttt{x} diventa 1, e il ciclo interno riparte colorando 
+          la seconda colonna
+    \item E così via fino a \texttt{x=9}
+\end{itemize}
+
+Risultato: un quadrato di 10×10 pixel = 100 pixel colorati!
+
+\begin{consiglio}
+Pensa ai cicli annidati come a leggere un libro: 
+\begin{itemize}
+    \item Il ciclo esterno cambia \textbf{pagina} (colonna X)
+    \item Il ciclo interno legge tutte le \textbf{righe} di quella pagina (Y)
+\end{itemize}
+\end{consiglio}
+
 \subsection{Esercizio: Disegna un quadratino rosso}
 
 \begin{esercizio}
@@ -639,6 +734,57 @@ Per far muovere qualcosa, dobbiamo ridisegnarlo tante volte in posizioni leggerm
     \item \textbf{Evento Tick}: È la funzione che viene eseguita a ogni "tic" dell'orologio.
 \end{itemize}
 
+\subsection{Come aggiungere il Timer al progetto}
+
+Il Timer è uno strumento speciale: \textbf{non si vede sulla finestra}, 
+ma appare in una zona chiamata "Component Tray" (vassoio dei componenti) 
+sotto la Form.
+
+\textbf{Procedura passo-passo:}
+
+\begin{enumerate}
+    \item Apri la \textbf{Toolbox} (la scatola degli attrezzi a sinistra).
+    
+    \item Cerca nella categoria \textbf{"Components"} oppure scrivi 
+          "Timer" nella casella di ricerca.
+    
+    \item \textbf{Trascina il Timer} sulla tua Form. Non importa dove 
+          lo lasci: apparirà automaticamente nella zona grigia sotto 
+          la finestra (il Component Tray) e si chiamerà \texttt{timer1}.
+    
+    \item \textbf{Clicca sul Timer} nel Component Tray per selezionarlo.
+    
+    \item Vai nella finestra delle \textbf{Proprietà} e imposta:
+    \begin{itemize}
+        \item \textbf{Interval}: Scrivi \texttt{20} (significa 20 millisecondi, 
+              cioè il Timer scatterà 50 volte al secondo)
+        \item \textbf{Enabled}: Imposta su \texttt{True} per farlo partire 
+              subito, oppure lascia \texttt{False} se vuoi attivarlo solo 
+              quando premi un pulsante
+    \end{itemize}
+    
+    \item Per creare l'evento Tick, fai \textbf{doppio clic sul Timer} 
+          nel Component Tray. Visual Studio aprirà il codice e creerà 
+          automaticamente la funzione:
+          
+          \texttt{private void timer1\_Tick(object sender, EventArgs e)}
+          
+    \item Ora sei pronto per scrivere il codice che si ripeterà a ogni "tic"!
+\end{enumerate}
+
+\begin{consiglio}
+Se vuoi che il Timer parta solo quando premi un pulsante (ad esempio 
+"Inizia Gioco"), lascia \texttt{Enabled = False} nelle proprietà. 
+Poi, nel codice del pulsante, scrivi:
+
+\texttt{timer1.Enabled = true;} // Accende il Timer
+
+Per fermarlo, usa:
+
+\texttt{timer1.Enabled = false;} // Spegne il Timer
+\end{consiglio}
+
+
 \subsection{La logica del movimento}
 
 A ogni "tic" del Timer dobbiamo:
@@ -658,6 +804,37 @@ A ogni "tic" del Timer dobbiamo:
 \end{esercizio}
 
 \textbf{Soluzione:}
+
+\subsubsection{Creiamo la funzione per disegnare}
+
+Prima di far muovere il punto, dobbiamo creare una funzione che sa come disegnarlo:
+
+\begin{lstlisting}[caption={Funzione per disegnare un punto}]
+// Dichiariamo il foglio digitale come variabile globale
+Bitmap foglio;
+
+private void Form1_Load(object sender, EventArgs e)
+{
+    // Creiamo il foglio grande quanto la PictureBox
+    foglio = new Bitmap(pictureBox1.Width, 
+                        pictureBox1.Height);
+}
+
+private void disegnaPunto(int posX, int posY)
+{
+    // Cancelliamo tutto (riempiamo di bianco)
+    using (Graphics g = Graphics.FromImage(foglio))
+    {
+        g.Clear(Color.White);
+    }
+    
+    // Disegniamo il punto rosso nella nuova posizione
+    foglio.SetPixel(posX, posY, Color.Red);
+    
+    // Mostriamo il foglio aggiornato
+    pictureBox1.Image = foglio;
+}
+\end{lstlisting}
 
 \begin{lstlisting}[caption={Punto in movimento}]
 // Posizione di partenza
@@ -877,6 +1054,152 @@ public Quadratino ricalcolaPosizione(Quadratino q)
 }
 \end{lstlisting}
 
+\section{Le Funzioni per Disegnare i Quadratini}
+
+Prima di mettere tutto nel Timer, dobbiamo creare le funzioni che sanno 
+disegnare e cancellare i nostri quadratini sullo schermo.
+
+\subsection{Dichiarare il foglio digitale}
+
+Per prima cosa, dobbiamo creare una variabile \textbf{globale} (cioè 
+che esiste per tutto il programma) per il nostro foglio Bitmap:
+
+\begin{lstlisting}[caption={Variabile globale nella classe Form}]
+public partial class Form1 : Form
+{
+    // Variabili globali
+    Bitmap foglio;
+    Quadratino q1;
+    Ostacolo o1;
+    
+    public Form1()
+    {
+        InitializeComponent();
+    }
+    
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        // Creiamo il foglio grande quanto la PictureBox
+        foglio = new Bitmap(pictureBox1.Width, 
+                            pictureBox1.Height);
+        
+        // Creiamo il quadratino
+        q1 = new Quadratino(100, 100, 3, 2, 20, Color.Red);
+        
+        // Avviamo il timer
+        timer1.Enabled = true;
+    }
+}
+\end{lstlisting}
+
+\subsection{La funzione disegnaQuadrato}
+
+Questa funzione colora tutti i pixel del quadratino nella sua posizione attuale:
+
+\begin{lstlisting}[caption={Funzione per disegnare un quadratino}]
+private void disegnaQuadrato(Quadratino q)
+{
+    // Calcoliamo i bordi del quadrato
+    int sinistra = q.x - q.dimensione / 2;
+    int destra = q.x + q.dimensione / 2;
+    int alto = q.y - q.dimensione / 2;
+    int basso = q.y + q.dimensione / 2;
+    
+    // Disegna pixel per pixel
+    for (int i = sinistra; i <= destra; i++)
+    {
+        for (int j = alto; j <= basso; j++)
+        {
+            // Controlla che non esca dai bordi dell'immagine
+            if (i >= 0 && i < foglio.Width && 
+                j >= 0 && j < foglio.Height)
+            {
+                foglio.SetPixel(i, j, q.colore);
+            }
+        }
+    }
+    
+    // Aggiorna la PictureBox per mostrare le modifiche
+    pictureBox1.Image = foglio;
+}
+\end{lstlisting}
+
+\subsection{La funzione cancellaQuadrato}
+
+Questa funzione "cancella" il quadratino colorando i suoi pixel di bianco:
+
+\begin{lstlisting}[caption={Funzione per cancellare un quadratino}]
+private void cancellaQuadrato(Quadratino q)
+{
+    // Calcoliamo i bordi del quadrato
+    int sinistra = q.x - q.dimensione / 2;
+    int destra = q.x + q.dimensione / 2;
+    int alto = q.y - q.dimensione / 2;
+    int basso = q.y + q.dimensione / 2;
+    
+    // Cancella pixel per pixel (colora di bianco)
+    for (int i = sinistra; i <= destra; i++)
+    {
+        for (int j = alto; j <= basso; j++)
+        {
+            // Controlla che non esca dai bordi
+            if (i >= 0 && i < foglio.Width && 
+                j >= 0 && j < foglio.Height)
+            {
+                foglio.SetPixel(i, j, Color.White);
+            }
+        }
+    }
+    // NON serve pictureBox1.Image = foglio qui,
+    // perche' lo faremo dopo aver ridisegnato
+}
+\end{lstlisting}
+
+\begin{attenzione}
+\textbf{Perché cancellaQuadrato non aggiorna subito la PictureBox?}
+
+Nota che nella funzione \texttt{cancellaQuadrato} non abbiamo scritto 
+\texttt{pictureBox1.Image = foglio} alla fine.
+
+\textbf{Motivo:} Nel Timer, facciamo questa sequenza:
+\begin{enumerate}
+    \item Cancelliamo il quadratino (coloriamo di bianco)
+    \item Calcoliamo la nuova posizione
+    \item Ridisegniamo il quadratino (coloriamo del suo colore)
+    \item SOLO ALLA FINE aggiorniamo la PictureBox
+\end{enumerate}
+
+Se aggiornassimo la PictureBox dopo ogni operazione, vedremmo uno 
+"sfarfallio" fastidioso! Invece, preparando tutto sul foglio e 
+mostrando l'immagine solo alla fine, il movimento è fluido.
+\end{attenzione}
+
+\subsection{Esempio completo nel Timer}
+
+Ecco come usare tutte queste funzioni insieme:
+
+\begin{lstlisting}[caption={Timer completo con le funzioni}]
+private void timer1_Tick(object sender, EventArgs e)
+{
+    // 1. Cancella il quadratino dalla vecchia posizione
+    cancellaQuadrato(q1);
+    
+    // 2. Ricalcola la posizione e gestisci i rimbalzi
+    q1 = ricalcolaPosizione(q1);
+    
+    // 3. Ridisegna l'ostacolo (se esiste)
+    if (o1 != null)
+        disegnaOstacolo(o1);
+    
+    // 4. Disegna il quadratino nella nuova posizione
+    disegnaQuadrato(q1);
+    
+    // La PictureBox si aggiorna automaticamente 
+    // nella funzione disegnaQuadrato
+}
+\end{lstlisting}
+
+
 % ====================================
 \section{Gli Ostacoli e le Collisioni}
 
@@ -885,6 +1208,78 @@ Per far rimbalzare un quadratino contro un ostacolo, dobbiamo usare la logica de
 \subsection{Creiamo l'Ostacolo}
 
 Prima di tutto, definiamo cos'è un ostacolo. Un ostacolo è un rettangolo che ha due punti fissi: l'angolo in alto a sinistra (x0, y0) e l'angolo in basso a destra (x1, y1).
+
+\subsubsection{Il Codice della Classe Ostacolo}
+
+Ora che sappiamo cos'è un ostacolo concettualmente, scriviamo il codice 
+per crearlo nel nostro programma:
+
+\begin{lstlisting}[caption={Classe Ostacolo}]
+public class Ostacolo
+{
+    // Le coordinate del rettangolo
+    public int x0, y0; // Angolo in alto a sinistra
+    public int x1, y1; // Angolo in basso a destra
+    public Color colore; // Il colore dell'ostacolo
+    
+    // Il costruttore: come creare un nuovo ostacolo
+    public Ostacolo(int inizioX, int inizioY, 
+                    int fineX, int fineY)
+    {
+        x0 = inizioX;
+        y0 = inizioY;
+        x1 = fineX;
+        y1 = fineY;
+        colore = Color.Gray;
+    }
+}
+\end{lstlisting}
+
+\textbf{Come usare questa classe:}
+
+Nell'evento \texttt{Form1\_Load}, puoi creare un ostacolo così:
+
+\begin{lstlisting}[caption={Creare un ostacolo}]
+// Creiamo un ostacolo al centro dello schermo
+Ostacolo o1 = new Ostacolo(200, 200, 300, 300);
+\end{lstlisting}
+
+Questo crea un rettangolo grigio che va da (200,200) a (300,300), 
+quindi largo e alto 100 pixel.
+
+\subsubsection{Disegnare l'Ostacolo sullo schermo}
+
+Ora che abbiamo creato l'ostacolo, dobbiamo farlo vedere! Aggiungiamo 
+una funzione per disegnarlo:
+
+\begin{lstlisting}[caption={Funzione per disegnare l'ostacolo}]
+private void disegnaOstacolo(Ostacolo o)
+{
+    // Disegna un rettangolo pieno
+    for (int i = o.x0; i <= o.x1; i++)
+    {
+        for (int j = o.y0; j <= o.y1; j++)
+        {
+            // Controlla che non esca dai bordi
+            if (i >= 0 && i < foglio.Width && 
+                j >= 0 && j < foglio.Height)
+            {
+                foglio.SetPixel(i, j, o.colore);
+            }
+        }
+    }
+    pictureBox1.Image = foglio;
+}
+\end{lstlisting}
+
+\begin{consiglio}
+Chiama \texttt{disegnaOstacolo(o1)} nell'evento \texttt{Form1\_Load} 
+dopo aver creato l'ostacolo, così sarà visibile fin dall'inizio del programma!
+
+Puoi anche chiamarla nel Timer prima di disegnare i quadratini, così 
+l'ostacolo sarà sempre visibile anche quando i quadratini si muovono 
+sopra di esso.
+\end{consiglio}
 
 \subsection{La logica del "Tocco" (Collisione)}
 
@@ -936,6 +1331,31 @@ public void controllaCollisioneOstacoli(
         {
             q.vx = -q.vx; // Rimbalza!
         }
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Il Codice della Classe Ostacolo}
+
+Ecco come definiamo la classe Ostacolo nel nostro progetto:
+
+\begin{lstlisting}[caption={Classe Ostacolo}]
+public class Ostacolo
+{
+    // Le coordinate dell'ostacolo
+    public int x0, y0; // Angolo in alto a sinistra
+    public int x1, y1; // Angolo in basso a destra
+    public Color colore; // Il colore del rettangolo
+    
+    // Il costruttore: come nasce l'ostacolo
+    public Ostacolo(int inizioX, int inizioY, 
+                    int fineX, int fineY)
+    {
+        x0 = inizioX;
+        y0 = inizioY;
+        x1 = fineX;
+        y1 = fineY;
+        colore = Color.Gray;
     }
 }
 \end{lstlisting}
