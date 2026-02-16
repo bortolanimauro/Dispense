@@ -1,1 +1,1706 @@
-% File creato (puoi rimuovere questa linea e riempire il file come preferisci)
+\documentclass[12pt, a4paper]{book}   	
+\usepackage[paperwidth=21cm, paperheight=29.7cm, top=3cm, bottom=2.25cm, left=2cm, right=2cm]{geometry}
+\usepackage{titlesec}
+\titlespacing*{\chapter}{0cm}{-1cm}{1cm}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\usepackage{circuitikz}
+\usepackage[parfill]{parskip}    		
+\usepackage{graphicx}	
+\usepackage{multicol}
+\usepackage{adjustbox}
+\usepackage{tabulary}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{multirow}			
+\usepackage{amssymb}
+\usepackage{courier}
+\usepackage[italian]{babel}
+\usepackage{pgfplots}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{tikzmark}
+\usepackage{hyperref}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true, %set true if you want colored links
+	linktoc=all,     %set to all if you want both sections and subsections linked
+	linkcolor=black,  %choose some color if you want links to stand out
+}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	frame=L,
+	xleftmargin=\parindent,
+	language=C,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{blue},
+	stringstyle=\color{orange},
+}
+
+\lstdefinestyle{customasm}{
+	belowcaptionskip=1\baselineskip,
+	frame=L,
+	xleftmargin=\parindent,
+	language=[x86masm]Assembler,
+	basicstyle=\footnotesize\ttfamily,
+	commentstyle=\itshape\color{purple!40!black},
+}
+
+\lstset{escapechar=@,style=customc}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\title{Dispense di Programmazione C}
+\author{Mauro Bortolani}
+
+\begin{document}
+	\maketitle
+	\tableofcontents
+
+%------------------------------------------------------------------
+%
+%		Nozioni introduttive	
+%
+%------------------------------------------------------------------
+
+	
+\chapter{Nozioni introduttive}
+
+\section{Le Grandezze Fisiche}
+
+La fisica (dal greco physis, "natura")   una scienza che ha come scopo guardare, descrivere e tentare di comprendere il mondo che ci circonda. La fisica si propone di descrivere i fenomeni naturali in modo oggettivo, individuando relazioni tra i loro aspetti che possono essere espressi quantitativamente, attraverso delle misure. Le relazioni tra le misure sono espresse matematicamente e sono dette leggi fisiche. Un insieme di leggi fisiche   detta teoria fisica. La teoria fisica   valida, finch    sperimentalmente verificata. 
+Qualsiasi aspetto di un fenomeno naturale che possa essere misurato   detto grandezza fisica. Misurare una grandezza fisica vuol
+dire confrontarla con un'altra ad essa omogenea, ci  dello stesso tipo, detta unit  di misura, scelta come campione di riferimento.  Scopo della misura   determinare il rapporto tra la grandezza da misurare e l'unit  di misura.
+
+ESEMPIO: 
+
+Se diciamo che una persona   alta 1,80 m, vuol dire che abbiamo scelto come unit  di misura il metro. L'altezza della persona   1,80 volte la lunghezza del metro. La misura di una grandezza risulta perci  costituita da un valore numerico (1,80 nel nostro  caso), seguito dall'unit  di misura, rappresentata da un simbolo (nel nostro esempio la lettera m, simbolo del metro). 
+
+\subsection*{Il Sistema Internazionale}
+
+L'unit  di misura   arbitraria, ma deve essere scelta secondo alcuni criteri di praticit : 
+\begin{itemize}
+\item deve essere facilmente riproducibile; 
+\item non deve cambiare con il tempo; 
+\item deve essere identica per tutti in modo da poter comunicare e capire il risultato delle misure. 
+\end{itemize}  
+Non   necessario fissare l'unit  di misura per ogni grandezza fisica;   sufficiente farlo solo per alcune di esse, dette grandezze fondamentali. Le altre grandezze fisiche, dette grandezze derivate, sono ricavate da quelle fondamentali mediante relazioni matematiche. 
+Per uniformare tutte le unit  di misura   stato creato il Sistema Internazionale di Misura (S.I.) entrato in vigore il primo gennaio 1978, inizialmente solo in alcuni paesi europei. Il S.I.   formato da sette grandezze fondamentali
+
+\begin{center}
+	\begin{tabular}{|l|c|c|}
+		\hline
+		Nome								& Unit  di Misura		& Simbolo		\\ \hline
+		Lunghezza							& metro					& m				\\
+		Massa								& kilogrammo			& kg			\\
+		Tempo								& secondo				& s				\\
+		Temperatura							& kelvin				& K				\\
+		Intensit  di corrente elettrica		& ampere				& A				\\
+		Intensit  luminosa					& candela				& cd			\\
+		Quantit  di sostanza				& mole					& mol			\\												
+		\hline
+	\end{tabular}
+\end{center}
+
+La seguente tabella fornisce degli esempi di grandezze derivate: 
+
+\begin{center}
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		Nome		& Unit  di Misura			& Simbolo		& Derivata da:				\\ \hline
+		volume		& Metro cubo				& $m^3$			& $(Lunghezza)^3$			\\
+		velocit 	& metro/secondi				& $m/2$			& $Lunghezza/Tempo$			\\
+		forza		& Newton					& $N$ 			& $Massa*Lunghezza/Tempo^2$	\\
+					&							& $\left( N = { {1kg \cdot 1m} \over {1s^2} }  \right)$ & \\
+		densit 		& chilogrammo su metro cubo	& ${kg}/m^3$	& $Massa/Volume$				\\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\subsection*{Multipli e sottomultipli delle unit  di misura del SI }
+
+Come il comune sistema di numerazione, anche il S.I.   un sistema decimale. Ci  significa che i vari multipli e sottomultipli di ogni unit  di misura si ottengono rispettivamente moltiplicando o dividendo l'unit  di misura per opportune potenze di 10. Ad esempio, il chilometro   un multiplo del metro che si ottiene moltiplicando per 1000 (ossia per $10^3$) questa unit  di misura; lo si indica con il simbolo km, dove k sta a indicare il prefisso kilo-; pertanto $1km=10^3$m. Analogamente, un millimetro   un sottomultiplo del metro che si ottiene dividendo per 1000 (o, il che   la stessa cosa, moltiplicando per $10^{-3}$) questa unit  di misura; lo si indica  con  il  simbolo  mm,  dove  la  prima  m  sta  ad  indicare  il  prefisso  milli-; pertanto $1mm=10^{-3}$m. La tabella seguente porta un elenco 
+di alcuni multipli e sottomultipli delle unit  di misura e dei corrispondenti prefissi. 
+
+\begin{center}
+	\begin{tabular}{|l|l|c|}
+		\hline
+		Multiplo			&	Prefisso & simbolo 	\\ \hline
+		$10^{12}$			&	tera- &($T$)			\\
+		$10^{9}$			&	giga- &($G$)			\\
+		$10^{6}$			&	mega- &($M$)			\\
+		$10^{3}$			&	kilo- &($k$)			\\
+		$10^{2}$			&	etto- &($h$)			\\
+		$10^{1}$			&	deca- &($da$)			\\
+		$10^{-1}$			&	deci- &($d$)			\\
+		$10^{-2}$			&	centi- &($c$)		\\
+		$10^{-3}$			&	milli- &($m$)			\\
+		$10^{-6}$			&	micro- &($\mu$)			\\
+		$10^{-9}$			&	nano- &($n$)			\\
+		$10^{-12}$			&	pico- &($p$)			\\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\subsection*{Notazione scientifica e ordine di grandezza}
+
+Un numero   scritto in notazione scientifica quando   scritto nella forma 
+
+\begin{center}
+	$k \cdot 10^n$ con $1 \le k < 10$
+\end{center}
+
+con $n$ un numero intero relativo (...;-6;-5;-4;-3;-2;-1;0;1;2;3;4;5;6;...). 
+
+L'uso della notazione scientifica diventa praticamente indispensabile tutte le volte che si vuole operare con numeri molto piccoli o molto grandi tipo grandezze di tipo atomiche (esempio la carica dell'elettrone) od astronomiche (esempio la massa della terra) inoltre consente di poter leggere a colpo d'occhio l'ordine di grandezza del numero. 
+
+Si definisce inoltre ordine di grandezza (O.D.) di un numero la potenze del 10 pi  vicina al numero dato. La trasformazione di un numero da scrittura decimale normale a notazione scientifica (NS) si effettua nel seguente modo: 
+
+si sposta la virgola (a destra o a sinistra) delle cifre necessarie in modo da lasciarne solo una come parte intera, si moltiplica per $10^n$ dove n rappresenta, in  numero  di cifre, lo spostamento della virgola, e sar  positivo se lo spostamento avviene a sinistra, negativo se lo spostamento   a destra. 
+
+
+\begin{center}
+	\begin{tabular}{|l|l|}
+		\hline
+		$23456 = 2.3456 \cdot 10^5$ 		&	La virgola   stata spostata di 5 cifre a sinistra \\ 
+		$0.00000675 = 6.75 \cdot 10^{-6}$ 	&	La virgola   stata spostata di 6 cifre a destra \\ 
+		$0.00012 = 1.2 \cdot 10^{-4}$ 		&	La virgola   stata spostata di 4 cifre a destra  \\ 
+		$8578 = 8.578 \cdot 10^3$ 			&	La virgola   stata spostata di 3 cifre a sinistra \\ 
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\section{Sistemi di Numerazione e metodi di trasformazione}
+
+Nei calcolatori attuali vengono utilizzati quattro sistemi di numerazione: binario, in base otto, decimale ed esadecimale. Ognuno di essi ha pregi che ne giustificano l'uso in particolari fasi del processo di analisi digitale. Nel primo paragrafo verranno descritti i quattro sistemi e nel secondo si vedr  come trasformare un numero da una forma all'altra.
+
+\subsection*{Sistemi di numerazione}
+
+I sistemi di numerazione che verranno trattati in questo paragrafo sono di natura posizionale: il valore di una cifra dipende da come essa   collocata rispetto alle altre. I costituenti di un numero sono detti cifre (binarie, in base otto, decimali o esadecimali) e sono disposti da destra a sinistra per valore crescente. Per tale ragione la prima cifra a sinistra   detta cifra pi  significativa, mentre l'ultima a destra   detta cifra meno significativa. Nel numero decimale 1.234, per esempio, 1   la cifra pi  significativa, 4 quella meno significativa.
+
+\begin{center}	
+\noindent\rule{16cm}{0.4pt}
+
+	\begin{tabular}{L{8cm} R{8cm}}
+	pi  significativa & meno significativa \\
+	\end{tabular}
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+		x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x &	x \\
+		\hline
+	\end{tabular}
+	\begin{tabular}{L{8cm} R{8cm}}
+		sedicesima posizione & prima posizione \\
+	\end{tabular}
+	\label{[tab:posizionale]}
+\noindent\rule{16cm}{0.4pt}
+	
+	%Tabella \ref{[tab:posizionale]}
+\end{center}
+
+\subsection*{Numeri decimali}
+
+Il sistema di numerazione decimale, detto anche sistema in base 10,   di certo il pi  diffuso e familiare. I termini e le parole che vengono usate nella vita di tutti i giorni per far riferimento a quantit  misurabili sono derivati dal sistema di numerazione decimale. La parola decimale proviene dal termine latino \textit{decem} che vuol dire dieci. Tale sistema di numerazione fa uso delle dieci cifre 0, 1, 2, 3, 4, 5, 6, 7, 8 e 9.
+
+\textbf{Nel sistema di numerazione decimale vengono usate le dieci cifre 0, 1, 2, 3, 4, 5, 6, 7, 8 e 9.}
+
+\subsection*{Pesi e valori}
+
+Nel sistema decimale il peso di ciascuna cifra   pari a 10 elevato alla posizione occupata dalla cifra. Il peso della prima cifra, quindi,   10 0 = 1 e il valore ad essa associato   dato dalla cifra moltiplicata per 1, cio  dalla cifra stessa. Il peso della
+seconda cifra, invece,   10 1 = 10 e il valore ad essa associato   dato dalla cifra moltiplicata per 10. Analogamente il peso della terza cifra   10 2 = 100 e il valore ad essa associato   dato dalla cifra moltiplicata per 100.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		Posizione 	& Quinta 	& Quarta 	& Terza 	& Seconda 	& Prima \\ \hline
+		Peso 		& $10^4$ 	& $10^3$ 	& $10^2$ 	& $10^1$ 	& $10^0$ \\ 
+					& (10000)	& (1000)	& (100)		& (10)		& (1) 	\\ \hline
+	\end{tabular}
+	\label{[tab:pesi]}
+	
+	%Tabella \ref{[tab:pesi]}
+\end{center}
+
+Il valore dell'intero numero   dato dalla somma dei valori delle singole cifre, ovvero dalla somma delle singole cifre pesate con il peso corrispondente. Nella Tabella seguente sono mostrati i pesi delle cifre costituenti il numero 4567.
+
+\begin{center}
+	\begin{tabular}{|c c|}
+		
+		\hline
+		\begin{tabular}{c c c c}
+			\hline
+			4 		& 5 	& 6 	& 7		\\ 
+			1000 	& 100 	& 10 	& 1		\\ \hline
+			4000	& 500	& 50	& 7 	\\ 					
+		\end{tabular} &
+		\begin{tabular}{l}
+			Cifre \\ Pesi \\Risultati\\
+		\end{tabular}
+		\\
+		+ & \\
+		4567 & \\
+		\hline			
+	\end{tabular}	
+	\label{tab:esempio_posizionale}
+
+	%Tabella \ref{tab:esempio_posizionale}
+\end{center}
+
+\subsection*{Numeri binari}
+
+Il sistema di numerazione binario, detto anche sistema in base due,   usato dai calcolatori elettronici per le loro operazioni di base. I costituenti elettronici dei calcolatori sono attraversati da corrente elettrica in due possibili stati: on e off (acceso e spento); d'altro canto il sistema di numerazione binario usa due soli simboli, 0 e 1.   naturale, quindi, che tale sistema venga usato negli elaboratori elettronici con i simboli 0 e 1 a rappresentare rispettivamente gli stati off e on. Si osserva, infine, che l'aggettivo binario proviene dal latino, lingua in cui il prefisso bi viene usato per indicare il numero due. 
+
+\textbf{Nel sistema di numerazione binario sono usati i due simboli 0 e 1.}
+
+\subsection*{Pesi e valori}
+Il sistema binario, cos  come quello decimale, fa uso del concetto di peso. Il peso associato a ciascuna cifra dipende dalla posizione occupata dalla cifra nel numero ed   pari a due elevato alla posizione. In tabella il peso   riportato sia in forma esponenziale che in forma decimale. Il valore associato a una cifra   dato dalla cifra stessa moltiplicata per il suo peso.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		Posizione 	& Quinta 	& Quarta 	& Terza 	& Seconda 	& Prima \\ \hline
+		Peso		& $2^4$		& $2^3$		& $2^2$		& $2^1$		& $2^0$	\\	
+			 		& (16) 		& (8) 		& (4) 		& (2) 		& (1)	\\ \hline
+	\end{tabular}
+	\label{[tab:pesi_binari]}
+	
+	%Tabella \ref{[tab:pesi_binari]}
+\end{center}
+
+Il valore dell'intero numero   dato dalla somma delle singole cifre moltiplicate per il peso corrispondente. Nella Figura seguente sono mostrati i pesi delle cifre costituenti il numero binario 1101, equivalente al numero decimale 13.
+
+
+\begin{center}
+	\begin{tabular}{|c c|}
+		
+		\hline
+		\begin{tabular}{c c c c}
+			\hline
+			1 		& 1 	& 0 	& 1		\\ 
+			8	 	& 4 	& 2 	& 1		\\ \hline
+			8		& 4		& 0		& 1 	\\ 					
+		\end{tabular} &
+		\begin{tabular}{l}
+			Cifre \\ Pesi \\Risultati\\
+		\end{tabular}
+		\\
+		+ & \\
+		13 & \\
+		\hline			
+	\end{tabular}	
+	\label{tab:esempio_posizionale_binario}
+	
+	%Tabella \ref{tab:esempio_posizionale_binario}
+\end{center}
+
+\subsection*{Numeri in base otto}
+
+La numerazione in base otto   usata dai programmatori per rappresentare i numeri binari in forma compatta. 8   una potenza di 2 ($2^3$) e quindi pu  essere usato come modello del concetto binario. Tale sistema di numerazione fa uso di otto cifre: 0, 1, 2, 3, 4, 5, 6 e 7.
+
+\textbf{Nel sistema di numerazione in base otto vengono usate le otto cifre 0, 1, 2,3, 4, 5, 6 e 7.}
+
+\subsection*{Pesi e valori}
+
+Il sistema di numerazione in base otto fa uso del concetto di peso. Il peso associato a ciascuna cifra dipende dalla posizione occupata dalla cifra nel numero ed   pari a otto elevato alla posizione. In tabella il peso   riportato sia in forma esponenziale che in forma decimale. Il valore associato a una cifra   dato dalla cifra stessa moltiplicata per il suo peso. Il valore associato alla cifra 4 posta
+in terza posizione  , ad esempio, $4   8^2 = 256$.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		Posizione 	& Quinta 	& Quarta 	& Terza 	& Seconda 	& Prima \\ \hline
+		Peso		& $8^4$		& $8^3$		& $8^2$		& $8^1$		& $8^0$	\\	
+					& (4096) 	& (512) 	& (64) 		& (8) 		& (1)	\\ \hline
+	\end{tabular}
+	\label{[tab:pesi_ottali]}
+	
+	%Tabella \ref{[tab:pesi_ottali]}
+\end{center}
+
+Il valore dell'intero numero   dato dalla somma delle singole cifre moltiplicate per il peso corrispondente. Nella Figura sono mostrati i pesi delle cifre costituenti il numero in base otto 3471, equivalente al numero decimale 1849.
+
+\begin{center}
+	\begin{tabular}{|c c|}
+		
+		\hline
+		\begin{tabular}{c c c c}
+			\hline
+			3 		& 4 	& 7 	& 1		\\ 
+			512	 	& 64 	& 8 	& 1		\\ \hline
+			1536	& 256	& 56	& 1 	\\ 					
+		\end{tabular} &
+		\begin{tabular}{l}
+			Cifre \\ Pesi \\Risultati\\
+		\end{tabular}
+		\\
+		+ & \\
+		1849 & \\
+		\hline			
+	\end{tabular}	
+	\label{tab:esempio_posizionale_ottale}
+	
+	%Tabella \ref{tab:esempio_posizionale_ottale}
+\end{center}
+
+
+\subsection*{Numeri esadecimali}
+
+La parola esadecimale deriva dal termine greco hexadeca, che vuol dire sedici (hex = 6 e deca = 10). Il sistema esadecimale, quindi, si basa sul numero sedici, che   una potenza di due, $16 = 2^4$ , e pertanto anch'esso viene usato per rappresentare in forma compatta i numeri binari. Il sistema di numerazione esadecimale fa uso di sedici cifre: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E e F.
+
+\textbf{Nel sistema di numerazione esadecimale vengono usate le sedici cifre 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E e F.}
+
+\subsection*{Pesi e valori}
+
+Il sistema esadecimale, cos  come quelli discussi in precedenza, fa uso del concetto di peso. Il peso associato a ciascuna cifra dipende dalla posizione occupata dalla cifra nel numero ed   pari a sedici elevato alla posizione. In tabella il peso   riportato sia in forma esponenziale che in forma decimale. Il valore associato a una cifra   dato dalla cifra stessa moltiplicata per il suo peso. Il valore
+associato alla cifra 4 posta in terza posizione  , ad esempio, $4   16^2 = 1024$.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		Posizione 	& Quinta 	& Quarta 	& Terza 	& Seconda 	& Prima \\ \hline
+		Peso		& $16^4$	& $16^3$	& $16^2$	& $16^1$	& $16^0$	\\	
+					& (65536) 	& (4096) 	& (256)		& (16) 		& (1)	\\ \hline
+	\end{tabular}
+	\label{[tab:pesi_esadecimali]}
+	
+	%Tabella \ref{[tab:pesi_ottali]}
+\end{center}
+
+Il valore dell'intero numero   dato dalla somma delle singole cifre moltiplicate per il peso corrispondente. Nella Figura sono mostrati i pesi delle cifre costituenti il numero esadecimale 3471, equivalente al numero decimale 13425.
+
+
+\begin{center}
+	\begin{tabular}{|c c|}
+		
+		\hline
+		\begin{tabular}{c c c c}
+			\hline
+			3 		& 4 	& 7 	& 1		\\ 
+			4096 	& 256 	& 16 	& 1		\\ \hline
+			12288	& 1024	& 112	& 1 	\\ 					
+		\end{tabular} &
+		\begin{tabular}{l}
+			Cifre \\ Pesi \\Risultati\\
+		\end{tabular}
+		\\
+		+ & \\
+		13425 & \\
+		\hline			
+	\end{tabular}	
+	\label{tab:esempio_posizionale_esadecimale}
+	
+	%Tabella \ref{tab:esempio_posizionale_ottale}
+\end{center}
+
+
+\section{Passaggio da un sistema all'altro}
+Come si   visto in precedenza un numero pu  essere rappresentato in forme diverse, ovviamente   possibile convertire un numero da un sistema a un altro senza alterarne il valore. Per esempio un numero pu  essere trasformato dalla sua forma decimale a quella binaria e viceversa. In Tabella sono riportate le diverse forme dei primi sedici numeri interi positivi a partire da zero. La rappresentazione
+binaria del numero decimale 13  , per esempio, 1101, quella in base otto   15 e quella esadecimale   D.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Decimale 	& Binario	& Ottale 	& Esadecimale	\\ \hline
+		0			& 0000		& 00		& 0				\\
+		1			& 0001		& 01		& 1				\\
+		2			& 0010		& 02		& 2				\\
+		3			& 0011		& 03		& 3				\\
+		4			& 0100		& 04		& 4				\\
+		5			& 0101		& 05		& 5				\\
+		6			& 0110		& 06		& 6				\\
+		7			& 0111		& 07		& 7				\\
+		8			& 1000		& 10		& 8				\\
+		9			& 1001		& 11		& 9				\\
+		10			& 1010		& 12		& A				\\
+		11			& 1011		& 13		& B				\\
+		12			& 1100		& 14		& C				\\
+		13			& 1101		& 15		& D				\\
+		14			& 1110		& 16		& E				\\
+		15			& 1111		& 17		& F				\\
+		\hline
+	\end{tabular}
+	\label{[tab:esempio_quattro_sistemi]}
+\end{center}
+
+
+
+\subsection*{Conversione in decimale}
+
+Come si   discusso in precedenza la conversione di un numero binario, in base otto o esadecimale nella sua forma decimale   estremamente semplice e viene effettuata sommando i valori associati a ogni cifra del numero. Nella Figura sono riportate le forme binaria, in base otto ed esadecimale del numero decimale 78.
+
+\begin{center}
+	\begin{tabular}{|c|}		
+		\hline
+		\begin{tabular}{c l}
+			\begin{tabular}{|C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm}|}
+				\hline
+				1 & 0 & 0 & 1 & 1 & 1 & 0 \\
+				\hline
+			\end{tabular} & Numero Binario\\
+			\begin{tabular}{C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm}}
+				64 & 32 & 16 & 8 & 4 & 2 & 1 \\
+			\end{tabular} & Pesi\\
+			\begin{tabular}{C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm} C{0.3cm}}
+				64 & 0 & 0 & 8 & 4 & 2 & 0 \\
+			\end{tabular} & Risultati pesati\\
+			+ & \\
+			\begin{tabular}{|c|}
+				\hline
+				78 \\
+				\hline
+			\end{tabular} & Numero Decimale \\
+		\end{tabular} \\
+		\hline	
+	\end{tabular}
+\end{center}
+
+\begin{center}
+	\begin{tabular}{|c|}	
+		\hline
+		\begin{tabular}{c l}
+			\begin{tabular}{|C{0.3cm} C{0.3cm} C{0.3cm}|}
+				\hline
+				1 & 1 & 6 \\
+				\hline
+			\end{tabular} & Numero Ottale\\
+			\begin{tabular}{C{0.3cm} C{0.3cm} C{0.3cm}}
+				64 & 8 & 1 \\
+			\end{tabular} & Pesi\\
+			\begin{tabular}{C{0.3cm} C{0.3cm} C{0.3cm}}
+				64 & 8 & 6 \\
+			\end{tabular} & Risultati pesati\\
+			+ & \\
+			\begin{tabular}{|c|}
+				\hline
+				78 \\
+				\hline
+			\end{tabular} & Numero Decimale \\
+		\end{tabular} \\
+		\hline	
+	\end{tabular}	
+	\begin{tabular}{|c|}		
+		\hline
+		\begin{tabular}{c l}
+			\begin{tabular}{|C{0.3cm} C{0.3cm}|}
+				\hline
+				4 & E \\
+				\hline
+			\end{tabular} & Numero esadecimale\\
+			\begin{tabular}{C{0.3cm} C{0.3cm}}
+				16 & 1 \\
+			\end{tabular} & Pesi\\
+			\begin{tabular}{C{0.3cm} C{0.3cm}}
+				64 & 14 \\
+			\end{tabular} & Risultati pesati\\
+			+ & \\
+			\begin{tabular}{|c|}
+				\hline
+				78 \\
+				\hline
+			\end{tabular} & Numero Decimale \\
+		\end{tabular} \\
+		\hline	
+	\end{tabular}
+\end{center}
+
+\subsection*{Conversione di un numero decimale}
+
+La conversione di un numero decimale in una delle altre tre forme pu  essere realizzata con il metodo illustrato nella Figura.
+La trasformazione da decimale a binario viene effettuata dividendo il numero decimale per due: il resto, 0 o 1, rappresenta la cifra meno significativa del numero binario, il quoziente, invece, se diverso da zero, viene diviso nuovamente per due e il resto della nuova divisione fornisce la successiva cifra binaria. L'algoritmo si arresta quando il quoziente delle divisioni successive si annulla.
+
+Nella Figura sono illustrati i passi successivi che permettono di convertire il numero decimale 78 nella sua forma binaria 1001110.
+
+\begin{center}
+	\begin{tabular}{|c c|c c c|}		
+		\hline
+			Dividendo & Divisore & Quoziente & Resto & \\
+			78 & 2 & \tikzmark{a} 39 & 0 & \tikzmark{d}\\
+			39\tikzmark{b} & 2 & 19 & 1 & \\
+			19 & 2 & 9 & 1 & \\						
+			9 & 2 & 4 & 1 & \\
+			4 & 2 & 2 & 0 & \\
+			2 & 2 & 1 & 0 & \\									
+			1 & 2 & 0 & 1 & \tikzmark{c} \\	
+		\hline	
+	\end{tabular}
+\begin{tikzpicture}[overlay, remember picture, yshift=.25\baselineskip, shorten >=.5pt, shorten <=.5pt]
+\draw [->] ({pic cs:a}) [bend right] to ({pic cs:b});
+\draw [->] ({pic cs:c})  to ({pic cs:d});
+\end{tikzpicture}
+\end{center}
+
+Il numero binario risultante   la colonna del resto letta dal basso verso l'alto, quindi
+\begin{center} 
+	$78_{10} = 1001110_2$. 
+\end{center}
+Il pedice alla base del numero indica la base della notazione.
+
+ Per esercizio verifichiamo che convertendo 1001110 in decimale si ottiene 78:
+
+\begin{center}
+	$2^6 + 2^3 + 2^2 + 2^1 = 64 + 8 + 4 + 2 = 78$	
+\end{center}
+
+La conversione dalla forma decimale a quella in base otto e a quella esadecimale   realizzata in modo analogo, con divisore rispettivamente otto e sedici.
+
+\subsection*{Dalla base due alle basi otto e sedici}
+
+La trasformazione dalla base due a quella otto viene effettuata raggruppando le cifre binarie in gruppi di tre cifre da destra verso sinistra. Ogni terna viene quindi trasformata nella corrispondente cifra ottale (numero compreso tra 0 e 7) e tutte le cifre prese nell'ordine forniscono la versione in base otto del numero di partenza. 
+
+La trasformazione dalla base due alla base sedici   analoga. Le cifre binarie, per , vengono prese quattro a quattro e ogni quaterna viene trasformata nella sua corrispondente cifra esadecimale.
+
+\subsection*{Dalle basi otto e sedici alla base due}
+La conversione dalla base otto alla base due viene effettuata con la procedura inversa a quella descritta nel paragrafo precedente: ogni cifra del numero in base otto viene convertita nella sua forma binaria e le cifre binarie cos  ottenute vengono raggruppate per formare il numero binario.
+
+Anche la conversione dalla base sedici alla base due viene effettuata con la procedura inversa a quella descritta nel paragrafo precedente: ogni cifra del numero in base sedici viene convertita nella sua forma binaria e le cifre binarie cos  ottenute vengono raggruppate per formare il numero binario.
+
+
+
+
+%------------------------------------------------------------------
+%
+%		Introduzione alla programmazione in C	
+%
+%------------------------------------------------------------------
+
+
+
+
+\chapter{Introduzione alla programmazione in C}
+	
+\section{Introduzione}
+Il linguaggio C facilita un approccio Strutturato e disciplinato alla progettazione di un programma per computer. In questo capitolo introduciamo la programmazione in C e presentiamo molti esempi che illustrano varie importanti caratteristiche del linguaggio. Ogni esempio   analizzato attentamente. una istruzione per volta. nei prossimi capitoli, presentiamo una introduzione alla programmazione strutturata in C. In seguito useremo l?approccio strutturato in tutta la parte rimanente del libro.
+
+\textbf{\textit{\underline{Nota per la Classe}}}
+
+\textit{Tutti i programmi che scriveremo potranno essere provati con un qualunque compilatore C}
+
+Ad esempio potrete usare:
+\begin{itemize}
+	\item onlinegdb compilatore online (https://www.onlinegdb.com/)
+	\item DevC++ se lavorate su Windows
+	\item XCode se lavorate su sistemi Apple
+	\item Gcc o CodeBlocks se lavorate con Linux
+\end{itemize}
+
+\textit{Ma ne esistono molti altri e grosso modo vanno tutti bene!}
+
+
+\section{Un semplice programma C: visualizzare una riga di testo}
+Il C utilizza alcune notazioni che possono apparire strane a chi non ha mai programmato un computer. Cominceremo considerando un semplice programma C. il nostro primo esempio visualizza una riga di testo.
+
+Per quanto questo programma sia semplice. illustra molte caratteristiche importanti del linguaggio C. Consideriamo ora nel dettaglio ogni riga del programma. La riga
+
+\begin{lstlisting}
+/* Un primo programma C */
+\end{lstlisting}
+
+
+incomincia con /* e termina con */ per indicare che la riga e un commento. I programmatori inseriscono dei commenti per documentare i programmi e migliorare la leggibilit  degli stessi. I commenti non provocano l'esecuzione di nessuna azione da parte del computer, quando il programma viene eseguito. I commenti sono ignorati dal compilatore C e
+
+non inducono la generazione di alcun codice oggetto in linguaggio macchina. Il commento \textbf{Un primo programma C} descrive semplicemente gli scopi del programma. I Commenti aiutano anche le altre persone a leggere e comprendere il vostro programma, ma troppi
+commenti potrebbero rendere difficile la lettura dello stesso.
+
+\begin{lstlisting}
+/* Un primo programma 0 */ 
+main ()
+{
+	printf( "Welcome to C!\n");
+}
+\end{lstlisting}
+
+La riga \\
+\begin{lstlisting}
+main()
+\end{lstlisting}
+
+  una parte presente in tutti i programmi C. Le parentesi dopo main indicano che main   un blocco di costruzione del programma, chiamato \textit{funzione}. I programmi C contengono una o pi  funzioni, una delle quali deve essere main. Ogni programma C comincia eseguendo la funzione main.
+
+La parentesi graffa aperta, \{, deve aprire il corpo di ogni funzione. Una corrispondente parentesi graffa chiusa deve chiudere ogni funzione. Questa coppia di parentesi graffe e la porzione di programma racchiusa in esse sono anche dette blocco. Il blocco   una importante unit  dei programmi C.
+
+La riga
+\begin{lstlisting}
+printf("Welcome to C!\n");
+\end{lstlisting}
+
+ordina al computer di eseguire una azione. Visualizzare sullo schermo la stringa di caratteri indicata tra le virgolette. Una stringa   a volte detta stringa di caratteri, metraggio o letterale. L'intera riga, incluso printf, i suoi argomenti all'interno delle parentesi tonde e il punto e virgola (;),   detta istruzione. Ognuna di queste deve terminare con un punto e	virgola (detto anche terminatore di istruzione). Nel momento in cui sar  eseguita. l'istruzione printf precedente visualizzer  sullo schermo il messaggio \textbf{Welcome to C!} Normalmente, i caratteri sono visualizzati nello stesso modo in cui appaiono tra le virgolette della istruzione printf. Osservate che i caratteri \textbackslash n non sono stati visualizzati sullo schermo. Il carattere backslash (\textbackslash)   detto carattere di escape (fuga). Esso indica alla printf che dovr  fare qualcosa fuori dell'ordinario. Nel momento in cui avr  incontrato un backslash, l'istruzione printf guarder  il carattere successivo e lo unir  con il backslash per formare una sequenza di escape. La sequenza di escape \textbackslash n significa newline (nuova riga) e provoca il posizionamento del cursore nella posizione iniziale della riga successiva dello Schermo. Nella Figura \ref{fig:elenco_escape}, sono elencate altre sequenze di escape tipiche. L'istruzione printf   una
+delle tante funzioni fornite dalla libreria standard del C.
+
+\begin{center}
+	\begin{tabular}{p{2cm} l}
+		Sequenza di escape & Descrizione \\ \hline
+		\textbackslash n & Newline (nuova riga). Posizione il cursore all'inizio della riga successiva. \\ 
+		\textbackslash t & Tabulazione orizzontale. Muove il cursore alla tabulazione successiva.  \\
+		\begin{comment} 
+		\textbackslash r &  Ritorno carrello. Posiziona il cursore all'inizio della riga corrente; \\ & non lo fa avanzare a quella successiva.  \\ 
+		\end{comment}
+		\textbackslash a & Allarme. Fa suonare il cicalino del sistema.  \\ 
+		\textbackslash \textbackslash & Backslash. Visualizza un carattere backslash in una istruzione printf.\\ 
+		\begin{comment}		
+		\textbackslash ' & Apice singolo. Visualizza un carattere apice singolo in una istruzione printf.\\ 	
+			
+		\textbackslash " & Virgolette. Visualizza un carattere virgolette in una istruzione printf.\\ 
+		\end{comment}
+	\end{tabular}
+	\label{fig:elenco_escape}
+	
+	\scriptsize{Tab. \ref{fig:elenco_escape}  - Alcune sequenze di escape tipiche.}
+\end{center}
+ 
+Le ultime tre sequenze di escape nella Figura \ref{fig:elenco_escape} potrebbero sembrare strane. Dato che il backslash ha un significato speciale per l'istruzione printf, ovverosia essa lo riconosce come un carattere di escape, piuttosto che come un qualcosa da visualizzare, utilizzeremo un doppio backslash (\textbackslash \textbackslash) per indicare che ne dovr  essere visualizzato uno singolo.
+Anche stampare le virgolette presenta un problema per l'istruzione printf, poich  essa normalmente presume che queste ultime indichino i limiti di una stringa e che le stesse non debbano essere effettivamente visualizzate. Usando la sequenza di escape \textbackslash ", informeremo printf che dovr  stampare le virgolette.
+
+La \textit{parentesi graffa chiusa}, \}, indica che   Stata raggiunta la fine del \textbf{main}.
+
+Abbiamo affermato che l'istruzione printf spinge il computer a eseguire una \textit{azione}. Nel momento in cui   in esecuzione un programma qualsiasi, il computer svolge una serie di azioni mentre il programma prende delle decisioni. Alla fine di questo capitolo, tratteremo delle istruzioni decisionali. Nei prossimi capitoli, spiegheremo ulteriormente questo \textit{modello di azione/decisione} della programmazione.
+
+  importante osservare che le Funzioni della libreria standard, come \textbf{printf} e \textbf{scanf}, non fanno parte del linguaggio di programmazione C. Di conseguenza, il compilatore non potr  trovare, per esempio, un errore di battitura in \textbf{printf} e \textbf{scanf}. Nel momento in cui l'istruzione \textbf{printf} sar  compilata, il compilatore fornir  semplicemente uno spazio, nel programma oggetto, per una "chiamata" a quella funzione della libreria. Il compilatore non sa dove si trovino le funzioni della libreria a differenza del linker che, quando sar  eseguito, individuer  le funzioni della libreria e inserir  nel programma oggetto le chiamate appropriare a queste funzioni. A questo punto il programma oggetto   "completo" e pronto per essere eseguito. Il programma prodotto dal linker, infatti,   spesso chiamato eseguibile. Nel caso dovesse esserci un errore di digitazione nel nome della funzione, questo sar  individuato dal linker, perch , per quel nome nel programma C, esso non sar  in grado di trovare una corrispondenza tra i nomi di tutte le funzioni note delle librerie.
+
+La funzione \textbf{printf} pu  visualizzare \textbf{Welcome to C!} in molti modi differenti. Per esempio, il prossimo programma produce lo stesso output del programma del codice precedente. Ci  accade perch  ogni \textbf{printf} riprende la visualizzazione dal punto in cui si era fermata quella della \textbf{printf} precedente. La prima \textbf{printf} visualizza \textbf{Welcome} seguito da uno spazio, mentre la seconda \textbf{printf} incomincia a stampare immediatamente dopo lo spazio.
+
+Usando il carattere \textit{newline} come nel codice seguente, una singola funzione \textbf{printf} potr  visualizzare diverse righe. Ogni volta che incontrer  la sequenza di escape \textbackslash n (\textit{newline}), la funzione \textbf{printf} si posizioner  all'inizio della riga successiva.
+
+\begin{lstlisting}
+/* Visualizzare su una riga con due istruzioni printf */
+main()
+{
+	printf("Welcome ");
+	printf("to C!\n");
+}
+\end{lstlisting}
+	
+	
+\begin{tcolorbox}[width=.5\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=5mm, arc=3mm]
+	Welcome to C!
+\end{tcolorbox}
+
+\begin{lstlisting}
+/* Visualizzare righe multiple con una singola printf */
+main()
+{
+	printf("Welcome\nto\nC!\n?);
+}
+\end{lstlisting}
+
+\begin{tcolorbox}[width=.5\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=5mm, arc=3mm]
+	Welcome \\to \\C!
+\end{tcolorbox}
+
+%---------------------------------------------------------
+%	Sezione: Input/Output in C
+%---------------------------------------------------------
+\subsection*{I comandi printf e scanf}
+
+In C, i principali comandi per la comunicazione con l'utente sono \texttt{printf} e \texttt{scanf}.
+
+\begin{itemize}
+	\item \textbf{printf}: serve per mostrare informazioni a video. Pu  stampare testo e valori di variabili. La sintassi base  :
+	\begin{verbatim}
+		printf("Testo con segnaposto: %tipo", variabile);
+	\end{verbatim}
+	Dove \%tipo indica il tipo di variabile da stampare:
+	\begin{itemize}
+		\item \%d per interi
+		\item \%f per numeri a virgola mobile
+		\item \%c per caratteri singoli
+		\item \%s per stringhe
+	\end{itemize}
+	
+	\item \textbf{scanf}: serve per leggere dati da tastiera e salvarli in variabili. La sintassi base  :
+	\begin{verbatim}
+		scanf("%tipo", &variabile);
+	\end{verbatim}
+	  importante usare l'operatore \& prima della variabile per passare il suo indirizzo, cos  che \texttt{scanf} possa modificare il valore della variabile stessa.
+\end{itemize}
+
+\subsubsection*{Esempio}
+\begin{lstlisting}
+#include <stdio.h>
+
+int main() 
+{
+	int et ;
+	printf("Inserisci la tua et : ");
+	scanf("%d", &et );
+	printf("Hai %d anni\n", et );
+	return 0;
+}
+\end{lstlisting}
+
+In questo esempio:
+\begin{itemize}
+	\item \texttt{printf} mostra la richiesta di input all'utente.
+	\item \texttt{scanf} legge il valore inserito e lo salva nella variabile \texttt{et }.
+	\item La seconda \texttt{printf} mostra a video il valore appena inserito.
+\end{itemize}
+
+
+\section{Un altro semplice programma C: sommare due interi}
+
+Il nostro prossimo programma utilizza la funzione \textbf{scanf} della libreria standard per leggere due interi digitati alla tastiera dall'utente, calcolare la somma dei due valori e visualizzare il risultato usando la funzione \textbf{printf}. Il programma e l'output di esempio sono mostrami nella figura seguente.
+
+\begin{lstlisting}
+/* Programma di addizione */
+#include <stdio.h>
+main()
+{
+	int integer1;   /* dichiarazioni */
+	int integer2;
+	int sum;
+	printf("Enter first integer\n" ); /* prompt */
+	scanf("%d" , &integer1 ); /* legge un intero */
+	printf("Enter second integer\n" ); /* prompt */
+	scanf("%d" , &integer2); /* legge un intero */
+	sum = integer1 + integer2; /* assegnamento della somma */
+	printf("Sum is %d\n" . sum); /* visualizza la somma */
+	return 0; /* indica che il programma   terminato con successo */
+}
+\end{lstlisting}
+
+Il commento \textbf{/* Programma di addizione /*} dichiara lo scopo del programma. La riga
+\begin{lstlisting}
+#include <stdio.h>
+\end{lstlisting}
+
+  una direttiva per il \textit{preprocessore del C}. Le righe che incominciano con \# sono elaborate dal preprocessore, prima che il programma sia compilato. Questa specifica riga indica al preprocessore di includere nel programma il contenuto del \textit{file di intestazione} per \textit{l'input/output standard} (\textbf{stdio.h}).
+
+Questo file di intestazione contiene le informazioni e le dichiarazioni usate dal compilatore durante la compilazione delle funzioni per l'input/output standard, come \textbf{printf}. Il file di intestazione contiene anche informazioni che aiutano il compilatore a determinare se le chiamate alle funzioni della libreria siano state scritte correttamente. Nei prossimi capitoli spiegheremo pi  dettagliatamente i contenuti dei file di intestazione.
+
+Come abbiamo affermato in precedenza, ogni programma comincia la propria esecuzione con la funzione \textbf{main}. La parentesi graffa aperta \{ marca l'inizio del corpo del \textbf{main} mentre la corrispondente parentesi graffa chiusa marca la fine di quest'ultimo. La riga
+
+\begin{lstlisting}
+int integer1, integer2, sum;
+\end{lstlisting}
+
+  una dichiarazione. Le voci \textbf{integer1}, \textbf{integer2} e \textbf{sum} sono i nomi delle variabili. Una variabile   una locazione (posizione) della memoria in cui un valore pu  essere immagazzinato un numero perch  possa essere utilizzato da un programma. Questa dichiarazione specifica che le variabili \textbf{integer1}, \textbf{integer2} e \textbf{sum} sono di tipo \textit{\textbf{int}}. Ci  significa che queste variabili conterranno dei valori interi, ovverosia, dei numeri interi come 7, -11, 0, 31914 e simili. Tutte le variabili devono essere dichiarate con un nome e un tipo di dato, immediatamente dopo la parentesi graffa aperta che inizia il corpo del \textbf{main}, prima che possano essere utilizzate in un programma. In C, ci sono altri tipi di dato oltre a \textit{\textbf{int}}. In una dichiarazione possono essere dichiarate molte variabili dello stesso tipo. Avremmo potuto scrivere tre dichiarazioni, una per ogni variabile, ma la forma usata precedentemente   pi  concisa.
+	
+Un nome di variabile in C   qualsiasi \textit{identificatore} valido. Un identificatore   una serie di caratteri. Comprendente lettere, numeri e caratteri di sottolineatura (\_), che non comincia con un numero. Un identificatore pu  avere qualsiasi lunghezza, ma soltanto i primi 31
+caratteri devono essere riconosciuti dal compilatore C, in accordo con lo standard dell'ANSI C.	Il C   \textit{case sensitive}, ovvero, le lettere maiuscole e quelle minuscole sono differenti in C, perci  \textbf{a1} e \textbf{A1} sono identificatori distinti.
+
+Le dichiarazioni devono essere sistemate dopo la parentesi graffa aperta di una funzione e prima di ogni istruzione eseguibile. Per esempio. nel programma precedente, l'inserimento della dichiarazione dopo la prima \textbf{printf} avrebbe causato un errore di sintassi. Un \textit{errore di sintassi}   causato quando il compilatore non   in grado di riconoscere una istruzione. Il compilatore normalmente emette un messaggio di errore per aiutare il programmatore a localizzare e correggere l'istruzione errata. Gli errori di sintassi sono violazioni delle regole del linguaggio. Essi sono anche chiamati \textit{errori di compilazione}, o	\textit{errori a tempo di compilazione}.
+	
+L'istruzione
+\begin{lstlisting}
+printf("Enter first integer\n");
+\end{lstlisting}
+
+visualizza il letterale \textbf{Enter first integer} sullo schermo e si posiziona all'inizio della riga	successiva. Questo messaggio   detto prompt perch  chiede all'utente di eseguire una azione specifica
+
+L'istruzione
+\begin{lstlisting}
+scanf("%d", &integer1);
+\end{lstlisting}
+
+utilizza \textbf{scanf} per ottenere un valore dall'utente. La funzione \textbf{scanf} prende i dati in ingresso dallo standard input che   di solito la tastiera. Questa \textbf{scanf} ha due argomenti: \textbf{"\%d"} e \textbf{\&integer1}. Il primo argomento, la \textit{stringa di controllo del formato}, indica il tipo di dato che dovr  essere immesso dall'utente. La \textit{specifica di conversione} \%d indica che il dato dovr  essere un intero (la lettera d sta per "intero decimale"). Il \%, in questo contesto,   considerato dalla funzione \textbf{scanf} (e come vedremo anche da \textbf{printf}) alla stessa stregua di un carattere di escape (come $\backslash$) e la combinazione \textbf{\%d}   una sequenza di escape (come $\backslash$n). Il secondo argomento della \textbf{scanf} incomincia con una E commerciale (\&), detta in C operatore di indirizzo, seguita dal nome della variabile. La E commerciale (o ampersand), quando   combinata con il nome della variabile, indica alla \textbf{scanf} la locazione di memoria in cui   immagazzinata la variabile \textbf{integer1}. Il computer quindi immagazziner  il valore della variabile \textbf{integer1} in quella locazione. L'uso di ampersand (\&) confonde spesso i programmatori principianti o quelli che hanno gi  programmato in altri linguaggi che non richiedono questa notazione. Per ora, ricordate soltanto di far precedere ogni variabile da un ampersand in tutte le istruzioni \textbf{scanf}. Alcune eccezioni a questa regola saranno discusse nei futuri. Il reale significato dell'uso di ampersand diventer  chiaro dopo che avremo studiato i puntatori.
+
+Nel momento in cui il computer eseguir  la precedente \textbf{scanf}, attender  che l'utente abbia immesso un valore per la variabile \textbf{integer1}. L'utente risponder  digitando un intero e premendo il \textit{tasto return} (a volte detto \textit{tasto enter} o \textit{tasto di invio}), per inviare il numero al computer. Questo assegner  allora il suddetto numero, o valore, alla variabile \textbf{integer1}. Ogni successivo riferimento a \textbf{integer1} nel programma user  tale valore. Le funzioni \textbf{printf} e \textbf{scanf} facilitano l'interazione tra l'utente e il computer. Dato che questa interazione somiglia a un dialogo,   spesso chiamata elaborazione interattiva.
+
+L'istruzione
+\begin{lstlisting}
+printf("Enter second integer\n");
+\end{lstlisting}
+visualizza il messaggio \textbf{Enter second integer} sullo schermo e quindi posiziona il cursore all'inizio della riga successiva. Anche questa \textbf{printf} chiede all'utente di eseguire una azione.
+
+L'istruzione 
+\begin{lstlisting}
+scanf("%d", &integer2);
+\end{lstlisting}
+ottiene dall'utente un valore perla variabile \textbf{integer2}. \textit{L'istruzione di assegnamento}
+\begin{lstlisting}
+sum = integer1 + integer2;
+\end{lstlisting}
+calcola la somma delle variabili \textbf{integer1} e \textbf{integer2} e assegna il risultato alla variabile \textbf{sum}, usando \textit{l'operatore di assegnamento} =. L'istruzione   letta come "\textbf{sum} prende il valore di \textbf{integer1} + \textbf{integer2}". La maggior parte dei calcoli sono eseguiti nelle istruzioni di assegnamento. L'operatore = e quello + sono chiamati \textit{operatori binari} perch  ognuno di questi ha due operandi. Nel caso dell'operatore +, i due operandi sono \textbf{integer1} e \textbf{integer2}. Nel caso dell'operatore =, i due operandi sono \textbf{sum} e il valore della espressione \textbf{integer1} + \textbf{integer2}.
+
+L'istruzione
+\begin{lstlisting}
+printf("Sum is %d\n", sum);
+\end{lstlisting}
+usa la funzione \textbf{printf} per visualizzare sullo schermo il letterale \textbf{Sum is} seguito dal valore numerico della variabile \textbf{sum}. Questa \textbf{printf} ha due argomenti, \textbf{"Sum 15 \%d$\backslash$n"} e \textbf{sum}. Il primo argomento   la stringa di controllo del formato. Questa contiene alcuni caratteri letterali che dovranno essere visualizzati e la specifica di conversione \%d indicante che sar  visualizzato un intero. Il secondo argomento specifica il valore da visualizzare. Osservate che la specifica di conversione per un intero   la stessa sia in \textbf{printf}, sia in \textbf{scanf}. Questo accade per la maggior parte dei tipi di dato in C.
+
+I calcoli possono anche essere eseguiti all'interno della istruzione \textbf{printf}. Avremmo potuto combinare le due precedenti istruzioni in
+
+\begin{lstlisting}
+printf("Sum is %d\n", integer1 + integer2);
+\end{lstlisting}
+
+L'istruzione
+\begin{lstlisting}
+return 0;
+\end{lstlisting}
+
+restituisce il valore 0 all'ambiente del sistema operativo in cui il programma   stato eseguito. Questo indica al sistema operativo che il programma   stato eseguito con successo. Consultate i manuali del vostro specifico sistema operativo, per ottenere informazioni su
+come comunicare un particolare tipo di fallimento del programma.
+
+La parentesi graffa chiusa, \}, indica che   stata raggiunta la fine della funzione \textbf{main}.
+
+
+\section{L'aritmetica del C}
+
+La maggior parte dei programmi C esegue dei calcoli. Gli operatori aritmetici del C sono riassunti nella figura seguente. Osservate l'uso di vari simboli speciali non utilizzati in algebra. L'asterisco (*) indica la moltiplicazione, mentre il segno di percentuale (\%) denota l'operatore modulo che sar  introdotto in seguito. In algebra, se volessimo moltiplicare \textbf{a} per \textbf{b} potremmo semplicemente sistemare questi nomi di variabili, composti di lettere singole,
+l'uno di fianco all'altro come in \textbf{ab}. In C invece, se avessimo scritto cos . ab sarebbe stato interpretato come un singolo nome (o identificatore), composto di due lettere. Di conseguenza, il C (come gli altri linguaggi di programmazione. in generale) richiede che la moltiplicazione sia esplicitamente denotata, utilizzando l'operatore *, come in $a * b$.
+
+\begin{center}
+	\begin{tabular}{l l l l}
+		\hline
+		\textbf{Operazioni in C	}&\textbf{Operatore Aritmetico} & \textbf{Espressione algebrica} & \textbf{Espressione C} \\ \hline
+		Addizione		& +		& f + 7		& \textbf{f + 7} \\
+		Sottrazione		& -		& p + c		& \textbf{p - c} \\
+		Moltiplicazione	& *		& bm		& \textbf{b * m} \\
+		Divisione		& /		& $x/y$ o $x \over y$ o $x \div y$		& \textbf{x / y} \\
+		Modulo			& \%	& r mod s	& \textbf{r \% s} \\ \hline
+		
+	\end{tabular}
+	\label{fig:operatori_c}
+	
+	\scriptsize{Tab. \ref{fig:operatori_c}  - Gli operatori del C.}
+\end{center}
+
+Gli operatori aritmetici sono tutti operatori binari. Per esempio. l?espressione 3+7 contiene l'operatore binario + e gli operandi 3 e 7.
+
+La divisione tra interi restituisce un risultato intero. Per esempio, l'espressione 7 / 4 sar  valutata 1, mentre il valore di 17 l 5 sar  3. Il C fornisce l'operatore modulo, \%, che restituisce il resto di una divisione tra interi. Questo   un operatore intero che potr  essere utilizzato soltanto con operandi interi. L'espressione x \% y restituir  il resto della divisione tra x e y. Di conseguenza, 7 \% 4 restituir  3, mentre. 17 \% 6 produrr  2. Discuteremo molte interessanti applicazioni dell'operatore modulo.
+
+Le espressioni aritmetiche in C dovranno essere scritte su una riga per facilitare l'immissione dei programmi nel computer. Di conseguenza, espressioni come "a diviso b" dovranno essere scritte come a/b, cos  che tutti gli operatori e gli operandi appaiano su una stessa riga. La notazione algebrica
+
+$a \over b$
+
+non   generalmente accettabile dai compilatori, sebbene esistano alcuni pacchetti software specializzati, che supportano una notazione pi  naturale per le espressioni matematiche complesse.
+
+Le parentesi sono utilizzate nelle espressioni C in una maniera molto simile a quella utilizzata nelle espressioni algebriche. Per esempio, per moltiplicare a volte la quantit  b + c, scriveremo:
+
+$a * (b + c)$
+
+Il C valuta le espressioni aritmetiche in una sequenza precisa, determinata dalle seguenti regole di priorit  degli operatori, che sono generalmente le stesse adottate in algebra:
+\begin{enumerate}
+\item Le espressioni o parti di esse, contenute all'interno di coppie di parentesi, saranno valutate per prime. Di conseguenza, le parentesi potranno essere utilizzate per forzare l'ordine di valutazione, in modo che quest'ultima si svolga nella sequenza desiderata dal programmatore. Le parentesi hanno il "massimo livello di priorit ". Nel caso le parentesi siano nidificate saranno valutate per prime le espressioni della coppia pi  interna.
+
+\item In seguito saranno valutate le operazioni di moltiplicazione, divisione e modulo. Nel caso che un'espressione contenga diverse operazioni di moltiplicazione, divisione e modulo, la valutazione proceder  da sinistra a destra. La moltiplicazione, la divisione e il modulo si trovano allo stesso livello di priorit .
+
+\item In ultimo saranno valutate le operazioni di addizione e di sottrazione. Nel caso che una espressione contenga diverse operazioni di addizione e di sottrazione, la valutazione proceder  da sinistra a destra. Anche l'addizione e la sottrazione hanno lo stesso livello di priorit .
+\end{enumerate}
+
+Le regole di priorit  degli operatori sono direttive che consentono al C di valutare le espressioni nell'ordine corretto. Nel momento in cui affermiamo che la valutazione procede da sinistra a destra, ci stiamo riferendo all'associativit  degli operatori. Vedremo che alcuni operatori associano da destra a sinistra. La tabella seguente riassume le suddette regole di priorit  degli operatori.
+
+\begin{center}
+	\begin{tabular}{p{2.5cm} p{3cm} p{10cm}}
+		\hline
+		Operatore/i		&	Operazione/i	& Ordine di valutazione (priorit ) \\
+		\hline
+		( ) 	& Parentesi	& Sono valutate per prime. Nel caso che le parentesi siano nidificate, saranno valutate per prime le espressioni nel la coppia pi  interna. Nel caso che ci siano pi  coppie di parentesi "allo stesso livello" (ovverosia non nidificate), queste saranno valutare da sinistra a destra. \\
+		*, / o \% &	Moltiplicazione Divisione Modulo & Sono valutate per seconde. Nel caso che ce ne siano molte, saranno valutate da sinistra a destra. \\
+		+ o -	& Addizione Sottrazione & Sono valutate per ultime. Nel caso che ce ne siano molte saranno valutate da sinistra a destra.\\ 
+		
+		\hline		
+	\end{tabular}
+	\label{fig:priorita_c}
+	
+	\scriptsize{Tab. \ref{fig:priorita_c}  - Le priorit  degli operatori aritmetici.}
+\end{center}
+
+Consideriamo ora diverse espressioni alla luce delle regole di priorit  degli operatori. Ogni esempio elenca una espressione algebrica e il suo equivalente in C.
+L'esempio seguente calcola la media aritmetica di cinque termini:
+
+\quad Algebra: $m = {{a+b+c+d+e} \over 5}$
+
+\quad C: \quad\quad	$m = (a + b + c + d + e) / 5;$
+
+Le parentesi sono necessarie perch  la divisione ha una priorit  maggiore della addizione. Dovr  essere divisa per 5 l'intera quantit  (a + b + c + d + e). Nel caso le parentesi dovessero essere erroneamente omesse, otterremo a + b + c + d + e / 5 che sarebbe valutata in modo scorretto come
+
+\quad $a + b + c + d + {e \over 5}$
+
+L'esempio seguente   l'equazione di una linea retta:
+
+\quad Algebra: $y = mx + b$
+
+\quad C: \quad\quad	$y = m*x + b;$
+
+In questo caso non sono richieste delle parentesi. La moltiplicazione sar  valutata per prima poich  essa ha una priorit  maggiore della addizione.
+
+L'esempio successivo contiene le operazioni di modulo (\%), moltiplicazione, divisione, addizione e sottrazione:
+
+\quad Algebra: $z=pr\ mod q+w/x-y$
+
+\quad C: \quad\quad	$z=p*r\%q+w/x-y;$
+
+I numeri cerchiati sotto l'istruzione indicano l'ordine in cui il C valuter  gli operatori. La moltiplicazione, il modulo e la divisione saranno valutati per primi in ordine da sinistra a destra (ovverosia associano da sinistra a destra), poich  hanno una priorit  maggiore della addizione e della sottrazione. In seguito saranno valutate l'addizione e la sottrazione. Anche queste saranno valutare da sinistra a destra. Non tutte le espressioni con diverse coppie di parentesi contengono delle parentesi nidificate. L'espressione
+
+\begin{center}
+	$a * (b + c) + c * (d + e)$
+\end{center}
+
+non contiene parentesi nidificate. Diremo invece che le parentesi sono "allo stesso livello". In queste situazioni il C valuter  per prime le espressioni incluse nelle parentesi in ordine da sinistra a destra.
+Per sviluppare una miglior comprensione delle regole di priorit  degli operatori, vediamo come il C valuta un polinomio di secondo grado.
+
+$y=a * x * x + b * x + c$;
+
+I numeri cerchiati sotto l'istruzione indicano l'ordine in cui il C eseguir  le operazioni. Non esiste nessun operatore aritmetico in C per l'elevamento a potenza, perci  abbiamo rappresentato x come x * x.. La libreria standard del C include la funzione pow ("power", potenza) per eseguire l'elevamento a potenza. A causa di alcuni insidiosi problemi correlati ai tipi di dato richiesti da pow, rimandiamo la spiegazione dettagliata di pow fino al prossimo capitolo.
+
+Supponete che $a = 2$, $b = 3$, $c = 7$ e $x = 5$. La tabella mostra come sar  valutato il precedente polinomio di secondo grado.
+
+
+\begin{center}
+	\begin{tabular}{p{2cm} p{5cm} p{8cm}}
+		\hline 
+		\textit{Passo 1.} 	&	$y = \textbf{2 * 5} * 5 + 3 * 5 + 7 $; \\
+		& $2 * 5 = 10$ & (Prima la moltiplicazione pi  a sinistra)\\ \\
+		\textit{Passo 2.} 	&	$y = \textbf{10 * 5} + 3 * 5 + 7 $; \\
+		& $10 * 5 = 50$ & (La moltiplicazione pi  a sinistra)\\ \\
+		\textit{Passo 3.} 	&	$y = 50 + \textbf{3 * 5} + 7 $; \\
+		& $3 * 5 = 15$ & (Prima la moltiplicazione dell'addizione)\\ \\
+		\textit{Passo 4.} 	&	$y = \textbf{50 + 1}5 + 7 $; \\
+		& $50 + 15 = 65$ & (L'addizione pi  a sinistra)\\\\
+		\textit{Passo 5.} 	&	$y = 65 + 7 $; \\
+		& $65 + 7 = 72$ & (L'ultima operazione)\\  
+		\hline		
+	\end{tabular}
+	\label{fig:valutazione_polinomio}
+	
+	\scriptsize{Tab. \ref{fig:valutazione_polinomio}  - Valutazione di un polinomio di secondo grado.}
+\end{center}
+
+
+
+
+\section{Prendere delle decisioni: gli operatori di uguaglianza e relazionali}
+
+Le istruzioni eseguibili del C compiono delle azioni (come dei calcoli o l'input e l'output dei dati), oppure prendono delle decisioni (vedremo presto molti esempi di questo tipo). In un programma, per esempio, potremmo prendere una decisione per determinare se il voto di una persona in un esame   maggiore o uguale a 60 e, in tal caso, visualizzare il messaggio "Congratulazioni! Avete superato l'esame". Questa sezione introduce una semplice versione della \textit{struttura di controllo} \textbf{\textit{if}} del C, che consente a un programma di prendere delle decisioni basate sulla verit  o sulla falsit  di alcune espressioni chiamare per l'appunto condizioni. Nel caso in cui la condizione sia stata soddisfatta, ovverosia nel caso in cui risulti vera verr  eseguita l'istruzione presente all'interno del corpo della struttura \textbf{if}. Nel caso in cui la condizione non sia soddisfatta ovverosia nel caso in cui risulti falsa, l'istruzione presente all'interno del corpo non verr  eseguita. Dopo il completamento della struttura if, indipendentemente dal fatto che l'istruzione del corpo sia eseguita o no, l'esecuzione proceder  con l'istruzione successiva alla struttura \textbf{if}. Le condizioni nelle strutture \textbf{if} sono formare usando gli \textit{operatori di uguaglianza} e gli \textit{operatori relazionali} riassunti in figura. Gli operatori relazionali hanno lo stesso livello di priorit  e associano da sinistra a destra. Gli operatori di uguaglianza hanno un livello di priorit  pi  basso degli operatori relazionali e associano da sinistra a destra. (Nota: in C, una condizione pu  essere in realt  una espressione che generi un valore uguale (falso) o diverso (vero) da zero. 
+
+\begin{center}
+	\begin{tabular}{p{4.5cm} p{3.5cm} p{3cm} p{4.5cm}}
+		\hline \\
+		\textbf{Operatori algebrici} & \textbf{Operatori} \\
+		\textbf{di uguaglianza o} & \textbf{di uguaglianza o} & \textbf{Esempio di} & \textbf{Significato della} \\
+		\textbf{relazionali standard} & \textbf{relazionali in C} & \textbf{condizione C} & \textbf{condizione C} \\ \\
+		\hline
+		Operatori di uguaglianza \\ \\
+		= & == & x == y & x   uguale a y \\ \\
+		$\neq$ & != & x != y & x non   uguale a y \\ \\
+		Operatori relazionali \\
+		> & > & x > y & x   maggiore di y \\ \\
+		< & < & x < y & x   minore di y \\ \\
+		$\geq$ & >= & x >= y & x   maggiore o uguale a y \\ \\
+		$\leq$ & <= & x <= y & x   minore o uguale a y \\ \\
+		\hline		
+	\end{tabular}
+	\label{fig:ugualianza_relazionali}
+	
+	\scriptsize{Tab. \ref{fig:ugualianza_relazionali}  - Operatori di uguaglianza e relazionali.}
+\end{center}
+
+%[width=.5\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=5mm, arc=3mm]
+\begin{center}
+\begin{tcolorbox}[arc=3mm,boxsep=5mm ]
+	\textit{\textbf{
+			\begin{center}
+				Tipico errore:
+			\end{center}  
+		Confondere l'operatore di uguaglianza == con quello di assegnamento =.}}
+\end{tcolorbox}
+\end{center}
+
+Per evitare questa confusione, l'operatore di uguaglianza dovrebbe essere letto come "doppio uguale" mentre l'operatore di assegnamento dovrebbe essere letto come "prende". Confondere questi operatori, come vedremo presto, non provocher  necessariamente un errore di sintassi facilmente riconoscibile, ma potr  causare degli errori logici molto subdoli.
+
+L'esempio seguente utilizza sei istruzioni \textbf{if} per confrontare due numeri immessi dall'utente. Qualora la condizione in qualcuna di queste istruzioni if dovesse essere soddisfatta, sarebbe eseguita la funzione \textbf{printf} associata a quell'\textbf{if}. Nella figura sono mostrati il programma e tre output di esempio.
+
+Osservate che il programma in figura utilizza \textbf{scanf} per prendere in input i due numeri. Ogni specifica di conversione ha un argomento corrispondente in cui dovr  essere immagazzinato un valore. 
+
+Il primo \%d convertir  un valore che sar  immagazzinato nella variabile \textbf{num1}, mentre il secondo convertir  un valore che sar  immagazzinato nella variabile \textbf{num2}. Far rientrare il corpo di ogni istruzione \textbf{if} e inserire delle righe vuote sopra e sotto ognuna di queste, aumenter  la leggibilit  del programma. 
+
+Notate anche che ogni \textbf{if} della figura ha una singola istruzione nel suo corpo. Nel prossimo capitolo, mostreremo come specificare delle \textbf{if} con corpi composti da pi  istruzioni.
+
+\begin{lstlisting}
+/* Usare le istruzioni if, gli operatori relazionali 
+e quelli di uguaglianza */
+
+#include <stdio.h>
+
+main()
+{	
+	int num1, num2;
+	printf("Enter two integers, and I will tell you\n");
+	printf("the relationships they satisfy: ");
+	scanf("%d%d", &num1, &num2); /* legge due interi */
+	
+	if (num1 == num2)	
+		printf("%d is equal to %d\n", num1, num2);
+	
+	if (num1 l= num2)
+		printf("%d is not equal to %d\n", num1, num2);
+	
+	if (num1 < num2)
+		printf("%d is less than %d\n", num1, num2);
+	
+	if (num1 > num2)
+		printf("%d is greater than %d\n", num1, num2);
+	
+	if (num1 <= num2)
+		printf("%d is less than or equal to %d\n", num1, num2);
+	
+	if (num1 >= num2)	
+		printf("%d is greater than or equal to %d\n", num1, num2);
+
+	return 0; /* indica che il programma   terminato con successo */
+}
+\end{lstlisting}
+
+\begin{tcolorbox}[width=.8\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=1mm, arc=3mm]
+\texttt{Enter two integers, and I will tell you \\
+the relationships they satisfy: 3 7 \\
+3 is not equal to 7 \\
+3 is less than 7 \\
+3 is less than or equal to 7}
+\end{tcolorbox}
+
+\begin{tcolorbox}[width=.8\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=1mm, arc=3mm]
+\texttt{Enter two integers. and I will tell you \\
+the relationships they satisfy: 22 12 \\
+22 is not equal to 12 \\
+22 is greater than 12 \\
+22 is greater than or equal to 12}
+\end{tcolorbox}
+
+\begin{tcolorbox}[width=.8\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=1mm, arc=3mm]
+\texttt{Enter two integers, and I will tell you \\
+the relationships they satisfy: 7 7 \\
+7 is equal to 7 \\
+7 is less than or equal to 7 \\
+7 is greater than or equal to 7}
+\end{tcolorbox}
+
+Il commento nel codice precedente   spezzato su due righe. Nei programmi C, i caratteri di \textit{spazio bianco} come le tabulazioni, i newline e gli spazi, sono normalmente ignorati. Di
+conseguenza, le istruzioni e i commenti potranno essere spezzati su pi  righe. Non   in ogni caso corretto spezzare gli identificatori.
+
+La tabella seguente mostra le priorit  degli operatori introdotti in questo capitolo. Gli operatori sono mostrati dall'alto in basso, in ordine decrescente di priorit . Osservate che anche il segno di uguale   un operatore. Tutti questi operatori, a eccezione
+di quello di assegnamento =, associano da sinistra a destra. L'operatore di assegnamento (=) associa da destra a sinistra.
+
+\begin{center}
+	\begin{tabular}{p{8cm} p{8cm}}
+		\hline
+		Operatori & Associativit  \\
+		\hline \\
+		() 			&	da sinistra a destra \\
+		* / \% 		&	da sinistra a destra \\
+		+ -			&	da sinistra a destra \\
+		< <= > >=	&	da sinistra a destra \\
+		== !=		&	da sinistra a destra \\
+		= 			&	da destra a sinistra \\
+		\hline		
+	\end{tabular}
+	\label{fig:priorita_associativita}
+	
+	\scriptsize{Tab. \ref{fig:priorita_associativita}  - Priorit  e associativit  degli operatori discussi finora.}
+\end{center}
+
+Alcune delle parole che abbiamo usato nei programmi C di questo capitolo, in particolare \textbf{int}, \textbf{return} e \textbf{if}, sono keyword (parole chiave) ovverosia parole riservare del linguaggio. L'insieme completo delle parole chiave del C   mostrato nella figura seguente. Queste hanno un significato speciale per il compilatore C, perci  il programmatore dovr  stare attento a non utilizzarle come identificatori, per esempio, nei nomi di variabile. In questo corso, discuteremo di tutte le parole chiave.
+
+In questo capitolo, abbiamo introdotto molte caratteristiche importanti del linguaggio di programmazione C, inclusa la visualizzazione dei dati sullo schermo, l'immissione degli stessi da parte dell'utente, l'esecuzione di calcoli e le istruzioni decisionali. Nel prossimo capitolo, ci baseremo su queste tecniche mentre introdurremo la \textit{programmazione strutturata}.
+Lo studente diventer  pi  familiare con la tecnica di applicare dei rientri al codice. Studieremo come specificare l'ordine in cui le istruzioni saranno eseguite: il cosiddetto \textit{flusso di controllo}.
+
+\begin{center}
+	\begin{tabular}{p{4cm} p{4cm} p{4cm} p{4cm}}
+		\hline
+		\textbf{Parole chiave}\\
+		\hline \\
+		auto & break & case & char \\
+		const & continue & default & do \\
+		double & else & enum & extern \\
+		float & for & goto & if \\
+		int & long & register & return \\
+		short & signed & sizeof & static \\
+		struct & switch & typedef & union \\
+		unsigned & void & volatile & while \\		
+		\hline		
+	\end{tabular}
+	\label{fig:parole_chiave}
+	
+	\scriptsize{Tab. \ref{fig:parole_chiave}  - Le parole chiave riservate del C.}
+\end{center}
+
+\subsection{L'istruzione \texttt{if}}
+
+L'istruzione \texttt{if} serve per eseguire una o pi  operazioni solo se una condizione   vera.  
+La condizione   un confronto che pu  risultare \texttt{vero} oppure \texttt{falso}.  
+Se   vera, le istruzioni racchiuse tra parentesi graffe vengono eseguite, altrimenti il programma le salta.
+
+\begin{lstlisting}[language=C]
+	if (media > 6) {
+		printf("Promosso");
+	}
+\end{lstlisting}
+
+Nel programma precedente il messaggio \texttt{Promosso} viene stampato solo se la variabile \texttt{media}   maggiore di 6.
+
+\paragraph{Uso delle parentesi graffe}
+Se dopo l'\texttt{if} c'  una sola istruzione, le parentesi graffe non sono obbligatorie, ma   buona norma metterle sempre.  
+Questo aiuta a evitare errori e rende il codice pi  leggibile.
+
+\begin{lstlisting}[language=C]
+	// Anche cos  funziona, ma   meno chiaro:
+	if (media > 6)
+	printf("Promosso");
+\end{lstlisting}
+
+\paragraph{Pi  if nello stesso programma}
+  possibile usare pi  istruzioni \texttt{if} indipendenti nello stesso programma.  
+Ogni condizione viene controllata separatamente, e possono risultare vere pi  condizioni nello stesso momento.
+
+\begin{lstlisting}[language=C]
+	if (voto >= 6) {
+		printf("Promosso\n");
+	}
+	
+	if (voto == 10) {
+		printf("Eccellente!\n");
+	}
+\end{lstlisting}
+
+In questo esempio, se il voto   10, verranno eseguiti entrambi i blocchi di istruzioni.
+
+\paragraph{Errori comuni}
+\begin{itemize}
+	\item Usare un solo uguale \texttt{=} invece di due \texttt{==} nei confronti:
+	\begin{lstlisting}[language=C]
+		if (x = 5)   // ERRORE: assegna 5, non confronta
+	\end{lstlisting}
+	\item Dimenticare le parentesi graffe quando ci sono pi  istruzioni da eseguire.
+\end{itemize}
+
+\paragraph{Esercizio}
+Scrivi un programma che legga un numero e stampi:
+\begin{itemize}
+	\item ``positivo'' se il numero   maggiore di 0;
+	\item ``zero'' se   uguale a 0;
+	\item ``negativo'' se   minore di 0.
+\end{itemize}
+Usa solo istruzioni \texttt{if} (senza \texttt{else}).
+
+
+\subsection{Il costrutto \texttt{if ... else}}
+
+Nel costrutto \texttt{if} visto in precedenza, il programma esegue un blocco di istruzioni solo se la condizione   vera.  
+Ma cosa succede se vogliamo che il programma faccia qualcos'altro quando la condizione   falsa?  
+In questo caso si utilizza la parola chiave \texttt{else}, che introduce il blocco di istruzioni da eseguire quando la condizione   falsa.
+
+La sintassi generale   la seguente:
+
+\begin{lstlisting}
+	if (condizione) {
+		// istruzioni eseguite se la condizione   vera
+	}
+	else {
+		// istruzioni eseguite se la condizione   falsa
+	}
+\end{lstlisting}
+
+Il blocco \texttt{else}   facoltativo, ma quando   presente viene sempre eseguito se la condizione dell'\texttt{if} risulta falsa.
+
+Esempio:
+
+\begin{lstlisting}
+	int voto;
+	
+	printf("Inserisci il voto: ");
+	scanf("%d", &voto);
+	
+	if (voto >= 6) {
+		printf("Promosso!\n");
+	}
+	else {
+		printf("Bocciato!\n");
+	}
+\end{lstlisting}
+
+Nel programma precedente, se il voto   maggiore o uguale a 6 viene stampato ``Promosso!'',  
+altrimenti viene stampato ``Bocciato!''.  
+In questo modo il programma sceglie sempre uno dei due blocchi.
+
+Un altro esempio:
+
+\begin{lstlisting}
+	int numero;
+	
+	printf("Inserisci un numero: ");
+	scanf("%d", &numero);
+	
+	if (numero > 0) {
+		printf("Il numero   positivo\n");
+	}
+	else {
+		printf("Il numero non   positivo\n");
+	}
+\end{lstlisting}
+
+In questo caso l'\texttt{else} copre sia il caso in cui il numero   zero, sia quello in cui   negativo.
+
+\subsubsection*{Esercizio}
+Scrivi un programma che legge un numero intero e dice se   \textbf{pari} o \textbf{dispari}.  
+(Puoi usare l'operatore resto \texttt{\%}, ad esempio \texttt{n \% 2 == 0} significa ``n   divisibile per 2''.)
+
+
+Abbiamo visto che il costrutto \texttt{if} esegue un blocco di istruzioni solo se una condizione   vera.
+Per capire meglio come funzionano le condizioni logiche,   utile introdurre alcuni concetti di logica booleana,
+che sono alla base del funzionamento dei calcolatori e dei linguaggi di programmazione.
+
+%------------------------------------------------------------------
+%		Strutture Iterative (Cicli)
+%------------------------------------------------------------------
+
+\section{Le strutture iterative (Cicli)}
+
+Spesso in programmazione   necessario ripetere una o pi  istruzioni finch  una certa condizione rimane vera. Queste strutture sono chiamate \textit{cicli} o \textit{loop}. Il C mette a disposizione tre tipi di cicli: \texttt{while}, \texttt{do-while} e \texttt{for}.
+
+\subsection{L'istruzione \texttt{while}}
+
+L'istruzione \texttt{while} (mentre) permette di specificare un'azione che deve essere ripetuta finch  una condizione rimane vera.
+La sintassi  :
+
+\begin{lstlisting}
+	while (condizione) {
+		/* Istruzioni da ripetere */
+	}
+\end{lstlisting}
+
+Il funzionamento   il seguente:
+\begin{enumerate}
+	\item Viene valutata la \texttt{condizione}.
+	\item Se   \textbf{vera} (diversa da zero), viene eseguito il corpo del ciclo.
+	\item Si torna al passo 1.
+	\item Se   \textbf{falsa} (uguale a zero), il ciclo termina e si passa all'istruzione successiva.
+\end{enumerate}
+
+Ecco un esempio che stampa i numeri da 1 a 5:
+
+\begin{lstlisting}
+	/* Esempio di while: contatore */
+	#include <stdio.h>
+	
+	main() {
+		int contatore = 1; /* Inizializzazione */
+		
+		while (contatore <= 5) { /* Condizione */
+			printf("%d\n", contatore);
+			contatore = contatore + 1; /* Incremento */
+		}
+		
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{tcolorbox}[width=.3\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=2mm, arc=3mm]
+	\texttt{1\\2\\3\\4\\5}
+\end{tcolorbox}
+
+
+[Image of flowchart for if-else statement logic]
+
+
+\textbf{Attenzione ai cicli infiniti:} Se dimentichiamo di aggiornare la variabile della condizione (ad esempio rimuovendo \texttt{contatore + 1}), la condizione rimarr  sempre vera e il programma non terminer  mai.
+
+\subsection{L'istruzione \texttt{for}}
+
+L'istruzione \texttt{for} gestisce tutti i dettagli della ripetizione controllata da contatore in un'unica riga di codice.   il ciclo pi  usato quando si conosce a priori il numero di iterazioni da eseguire.
+
+La sintassi  :
+\begin{lstlisting}
+	for (inizializzazione; condizione; incremento) {
+		/* Istruzioni */
+	}
+\end{lstlisting}
+
+\begin{itemize}
+	\item \textbf{Inizializzazione:} Eseguita una sola volta all'inizio.
+	\item \textbf{Condizione:} Controllata prima di ogni iterazione.
+	\item \textbf{Incremento:} Eseguito alla fine di ogni iterazione.
+\end{itemize}
+
+Lo stesso esempio precedente (contare da 1 a 5), riscritto con il \texttt{for}:
+
+\begin{lstlisting}
+	/* Esempio di for */
+	#include <stdio.h>
+	
+	main() {
+		int i;
+		
+		for (i = 1; i <= 5; i++) {
+			printf("%d ", i);
+		}
+		
+		printf("\nFine del ciclo.\n");
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{tcolorbox}[width=.5\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=2mm, arc=3mm]
+	\texttt{1 2 3 4 5 \\ Fine del ciclo.}
+\end{tcolorbox}
+
+Il ciclo \texttt{for}   molto flessibile: si pu  contare all'indietro (decremento), variare il passo (es. \texttt{i = i + 2}) o utilizzare pi  variabili.
+
+\subsection{L'istruzione \texttt{do-while}}
+
+L'istruzione \texttt{do-while}   simile al \texttt{while}, ma verifica la condizione \textbf{alla fine} del ciclo invece che all'inizio. Questo garantisce che il corpo del ciclo venga eseguito \textbf{almeno una volta}.
+
+\begin{lstlisting}
+	do {
+		/* Istruzioni */
+	} while (condizione);
+\end{lstlisting}
+
+Notate il punto e virgola obbligatorio dopo la condizione del \texttt{while}.
+
+Esempio pratico: richiesta di input finch  l'utente non inserisce un numero valido.
+
+\begin{lstlisting}
+	/* Esempio di do-while per validazione input */
+	#include <stdio.h>
+	
+	main() {
+		int numero;
+		
+		do {
+			printf("Inserisci un numero positivo: ");
+			scanf("%d", &numero);
+		} while (numero <= 0);
+		
+		printf("Hai inserito: %d\n", numero);
+		return 0;
+	}
+\end{lstlisting}
+
+Se l'utente inserisce -5, la condizione \texttt{numero <= 0}   vera e il ciclo si ripete. Appena inserisce 10, la condizione diventa falsa e il ciclo termina.
+
+
+%------------------------------------------------------------------
+%		Gli Array (Vettori)
+%------------------------------------------------------------------
+
+\section{Gli Array (Vettori)}
+
+Finora abbiamo utilizzato variabili in grado di contenere un singolo dato alla volta (una variabile \texttt{int} contiene un solo numero, una \texttt{float} un solo valore decimale).
+Tuttavia, spesso in programmazione nasce l'esigenza di gestire collezioni di dati dello stesso tipo, come ad esempio i voti di 30 studenti di una classe o le temperature registrate in una settimana.
+
+Invece di dichiarare 30 variabili distinte (\texttt{voto1, voto2, ..., voto30}), il C ci permette di utilizzare un \textbf{array} (o vettore).
+
+\subsection{Cos'  un Array}
+
+Un array   una struttura dati che memorizza una sequenza di elementi dello \textbf{stesso tipo} in locazioni di memoria contigue.
+Possiamo immaginare un array come una fila di cassette della posta o un casellario: l'intero casellario ha un nome, ma per accedere a una cassetta specifica dobbiamo conoscere il suo numero (indice).
+
+\subsection{Dichiarazione di un Array}
+
+Per creare un array in C, dobbiamo specificare il tipo di dati che conterr , il nome dell'array e il numero di elementi (dimensione) tra parentesi quadre.
+
+\begin{lstlisting}
+	tipo nome_array[dimensione];
+\end{lstlisting}
+
+Esempio:
+\begin{lstlisting}
+	int voti[5];
+\end{lstlisting}
+
+Questa istruzione dice al computer di riservare spazio in memoria per 5 numeri interi consecutivi.
+
+\subsection{Indici e Accesso agli elementi}
+
+Ogni elemento dell'array   identificato da un numero chiamato \textbf{indice}.
+\textbf{Attenzione:} In C, gli indici iniziano sempre da \textbf{0}.
+
+Se abbiamo un array \texttt{voti[5]}, gli elementi saranno:
+\begin{itemize}
+	\item \texttt{voti[0]} (primo elemento)
+	\item \texttt{voti[1]} (secondo elemento)
+	\item \texttt{voti[2]} (terzo elemento)
+	\item \texttt{voti[3]} (quarto elemento)
+	\item \texttt{voti[4]} (quinto e ultimo elemento)
+\end{itemize}
+
+L'ultimo indice valido   sempre uguale alla \textit{dimensione} - 1.
+
+\begin{center}
+	\textbf{Rappresentazione grafica di \texttt{int c[5]}} \\ \vspace{0.5cm}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\textbf{Nome} & c[0] & c[1] & c[2] & c[3] & c[4] \\ \hline
+		\textbf{Valore} & 10 & 25 & -3 & 0 & 100 \\ \hline
+		\textbf{Indice} & 0 & 1 & 2 & 3 & 4 \\ \hline
+	\end{tabular}
+\end{center}
+
+Per assegnare un valore a un elemento specifico o per leggerlo, si usa il nome dell'array seguito dall'indice tra parentesi quadre:
+
+\begin{lstlisting}
+	voti[0] = 8;      /* Assegna 8 al primo elemento */
+	voti[2] = 10;     /* Assegna 10 al terzo elemento */
+	x = voti[0] + 2;  /* Usa il valore di voti[0] */
+\end{lstlisting}
+
+\subsection{Inizializzazione degli Array}
+
+Gli array possono essere inizializzati al momento della dichiarazione usando una lista di valori tra parentesi graffe:
+
+\begin{lstlisting}
+	int numeri[5] = {10, 20, 30, 40, 50};
+\end{lstlisting}
+
+In questo caso:
+\texttt{numeri[0]} varr  10, \texttt{numeri[4]} varr  50.
+
+Se la lista di inizializzazione   pi  corta della dimensione dell'array, gli elementi rimanenti vengono automaticamente inizializzati a 0.
+\begin{lstlisting}
+	int n[10] = {0}; /* Inizializza tutto l'array a zero */
+\end{lstlisting}
+
+\subsection{Scorrere un Array con il ciclo for}
+
+L'utilizzo pi  potente degli array avviene in combinazione con il ciclo \texttt{for}. Possiamo usare la variabile contatore del ciclo come indice per accedere sequenzialmente a tutti gli elementi.
+
+Ecco un programma completo che chiede all'utente di inserire 5 numeri e poi li ristampa al contrario:
+
+\begin{lstlisting}
+	/* Esempio: Inserimento e stampa di un array */
+	#include <stdio.h>
+	
+	main() {
+		int numeri[5];
+		int i;
+		
+		/* Input: Caricamento dell'array */
+		printf("Inserisci 5 numeri interi:\n");
+		
+		for (i = 0; i < 5; i++) {
+			printf("Numero %d: ", i + 1);
+			scanf("%d", &numeri[i]);
+		}
+		
+		/* Output: Stampa al contrario */
+		printf("\nEcco i numeri in ordine inverso:\n");
+		
+		for (i = 4; i >= 0; i--) {
+			printf("%d ", numeri[i]);
+		}
+		
+		printf("\n");
+		return 0;
+	}
+\end{lstlisting}
+
+\begin{tcolorbox}[width=.6\linewidth, halign=left, colframe=red, colback=blue!30, boxsep=2mm, arc=3mm]
+	\ttfamily
+	Inserisci 5 numeri interi: \\
+	Numero 1: 10 \\
+	Numero 2: 5 \\
+	Numero 3: 8 \\
+	Numero 4: 2 \\
+	Numero 5: 12 \\
+	Ecco i numeri in ordine inverso: \\
+	12 2 8 5 10
+\end{tcolorbox}
+
+\subsubsection*{Errori comuni}
+Uno degli errori pi  gravi in C   tentare di accedere a un indice che non esiste (es. \texttt{voti[5]} in un array di dimensione 5). Il compilatore C non segnala questo errore, ma durante l'esecuzione il programma potrebbe bloccarsi o comportarsi in modo imprevedibile (sovrascrivendo altre aree di memoria).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Elementi di Logica}
+
+\subsection*{Calcolatore come rete logica}
+
+Il calcolatore pu  essere visto come una rete logica cio  come un insieme di dispositivi chiamati porte logiche opportunamente connessi.
+Le porte logiche sono dispositivi capaci di eseguire operazioni logiche su segnali binari.
+I segnali binari sono livelli di tensione.
+Il valore esatto della tensione del segnale non   significativo: conta l'appartenenza ad un livello contrassegnato \textbf{alto} e ad un livello
+contrassegnato \textbf{basso}.
+
+Questi livelli sono identificati tramite una coppia di simboli:
+
+\begin{center}
+	\begin{tabular}{c c}
+		0		&	1		\\
+		LOW		&	HIGH	\\
+		False	&	True	\\
+		Open	& 	Close	\\
+	\end{tabular}
+\end{center}
+
+\subsection*{Algebra Booleana}
+
+Le tecniche di composizione delle porte logiche in una rete sono derivate da una particolare algebra operante su variabili binarie e
+chiamata \textit{Algebra Booleana} (o Switching Algebra). L'algebra Booleana prende il nome dal matematico inglese George Boole (1815-1864) autore del testo \textit{The mathematical analysis of logic}.
+A lui   legato lo sviluppo della logica simbolica e degli operatori binari. Nel 1938 Shannon ha dimostrato come l'algebra booleana
+potesse essere presa a fondamento per la progettazione di circuiti logici digitali.
+
+\subsection*{Variabili Booleane}
+Una variabile booleana   una variabile binaria che pu  assumere esclusivamente due valori logici che saranno denotati con 0 e 1.
+Se $x$   una variabile booleana, vale quindi la seguente definizione formale:
+
+\begin{center}
+	\begin{tabular}{c c c}
+		$x = 0$	& se	& $x \ne 1$		\\
+		$x = 1$	& se	& $x \ne 0$		\\
+	\end{tabular}
+\end{center}
+
+
+\subsection*{Operatori Booleani}
+
+Si definiscono gli operatori booleani o logici fondamentali:
+
+\begin{center}
+	\begin{tabular}{l l}
+		\textbf{NOT}	& Negazione Logica		\\
+		\textbf{AND}	& Prodotto Logico		\\
+		\textbf{OR}	& Somma Logica		\\
+	\end{tabular}
+\end{center}
+
+\subsection*{Negazione o Complementazione}
+
+\textit{Definizione informale}
+
+Trattasi di una operazione unaria che restituisce il valore logico opposto a quello della variabile di ingresso.
+
+\textit{Rappresentazione come operatore}
+
+Per rappresentare il complemento di una variabile $x$ vengono usate varie notazioni. Fra le pi`u comunemente usate ricordiamo:
+
+\begin{center}
+	$not(x)$			\\
+	$\overline{x}$		\\
+	$x'$		\\
+	$-x$		\\
+\end{center}
+
+Rappresentazione dell'operazione $not(x)$ con la tavola della verit :
+
+\begin{center}
+	\begin{tabular}{c | c}
+		$x$		&	$\overline{x}$ \\ \hline
+		0		&	1		\\
+		1		&	0		\\		
+	\end{tabular}
+\end{center}
+
+Propriet :
+
+\begin{center}
+	$\overline{\overline{x}} = x$ \\
+	$\overline{\overline{1}} = 1$ \\
+	$\overline{\overline{\overline{0}}} = \overline{\overline{1}} = \overline{0} = 1$ \\
+\end{center}
+
+\newpage
+\subsection*{Prodotto Logico (AND)}
+
+\textit{Definizione informale}
+
+L'operazione di prodotto logico fra due (o pi ) variabili fornisce il valore logico 1 se e solo se tutte le variabili assumono valore logico 1.
+
+\textit{Rappresentazione come operatore}
+
+Per rappresentare il prodotto logico di due variabili $x$ e $y$ si usa la notazione:
+
+\begin{center}
+	$x$ $and$ $y$			\\
+	$x \cdot y$		\\
+	$xy$		\\
+\end{center}
+
+Rappresentazione dell'operazione $x \cdot y$ con la tavola della verit :
+
+\begin{center}
+	\begin{tabular}{c c | c}
+		$x$		& $y$	& $xy$ \\ \hline
+		0		&	0	&	0	\\
+		0		&	1	&	0	\\		
+		1		&	0	&	0	\\
+		1		&	1	&	1	\\		
+	\end{tabular}
+\end{center}
+
+Propriet :
+
+\begin{center}
+	$x \cdot 0 = 0$		\\
+	$x \cdot 1 = x$		\\
+	$x \cdot x = x$		\\
+	$x \cdot \overline{x} = 0$		\\
+\end{center}
+
+\newpage
+\subsection*{Somma Logica (OR)}
+
+\textit{Definizione informale}
+
+L'operazione di somma logica fra due (o pi ) variabili fornisce il valore logico 1 se e solo se almeno una delle variabili assume
+valore logico 1.
+
+\textit{Rappresentazione come operatore}
+
+Per rappresentare la somma logica di due variabili $x$ e $y$ si usa la notazione:
+
+\begin{center}
+	$x$ $or$ $y$			\\
+	$x + y$		\\
+\end{center}
+
+Rappresentazione dell'operazione $x + y$ con la tavola della verit :
+
+\begin{center}
+	\begin{tabular}{c c | c}
+		$x$		& $y$	& $x+y$ \\ \hline
+		0		&	0	&	0	\\
+		0		&	1	&	1	\\		
+		1		&	0	&	1	\\
+		1		&	1	&	1	\\		
+	\end{tabular}
+\end{center}
+
+Propriet :
+
+\begin{center}
+	$x + 0 = x$		\\
+	$x + 1 = 1$		\\
+	$x + x = x$		\\
+	$x + \overline{x} = 1$		\\
+\end{center}
+
+\subsection*{Logica e programmazione}
+
+Le operazioni logiche studiate (NOT, AND, OR) sono le stesse che vengono usate nei linguaggi di programmazione per
+costruire le condizioni dei comandi \texttt{if}, \texttt{while} e \texttt{for}.  
+Ad esempio, in C l?operatore \texttt{AND} si scrive \texttt{\&\&} e l?operatore \texttt{OR} si scrive \texttt{||}.  
+Approfondiremo il loro uso quando studieremo le condizioni composte.
+
+\begin{comment}
+\chapter{Lo sviluppo di programmi strutturati}
+
+\end{comment}
+
+	
+\end{document}
