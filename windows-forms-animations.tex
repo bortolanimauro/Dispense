@@ -1,23 +1,32 @@
-\documentclass[14pt]{extarticle}
-\usepackage[scaled]{helvet}
-\renewcommand{\rmdefault}{phv}
-\renewcommand{\sfdefault}{phv}
-\renewcommand{\familydefault}{\sfdefault}
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[table,xcdraw]{xcolor}
 \usepackage{setspace}
-\onehalfspacing
-\usepackage[a4paper, total={16cm, 25cm}, margin=3cm]{geometry}
-\usepackage{xcolor}
-\usepackage{titlesec}
-\usepackage{listings}
-\usepackage{parskip}
+\usepackage{geometry}
+\geometry{margin=3cm}
+\usepackage{enumitem}
 
-\lstset{basicstyle=\fontsize{11}{13}\selectfont, frame=single, backgroundcolor=\color{lightgray}}
-\titleformat{\section}{\normalfont\bfseries\Large}{}{0em}{} \titlespacing{\section}{0em}{2ex}{1.5ex}
-\titleformat{\subsection}{\normalfont\bfseries\large}{}{0em}{} \titlespacing{\subsection}{0em}{1.5ex}{0.5ex}
-\titleformat{\subsubsection}{\normalfont\bfseries}{}{0em}{} \titlespacing{\subsubsection}{0em}{1.5ex}{0ex}
+\setstretch{1.5}
+\renewcommand{\baselinestretch}{1.5}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\setlist[itemize]{itemsep=0.5em}
+\definecolor{mylightblue}{rgb}{0.902, 0.941, 0.980}
+\definecolor{mylightred}{rgb}{1.000, 0.922, 0.922}
+\definecolor{mylightgreen}{rgb}{0.922, 0.980, 0.922}
 
 \begin{document}
 
-% Original content goes here.
+% Original content goes here
+\section{Introduction}
+This is an example section.
+
+\begin{itemize}
+    \item \color{mylightblue} \textbf{Exercise:} This is an exercise box.
+    \item \color{mylightred} \textbf{Warning:} This is a warning box.
+    \item \color{mylightgreen} \textbf{Tip:} This is a tip box.
+\end{itemize}
+
+% More content...
 
 \end{document}
