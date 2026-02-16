@@ -270,6 +270,130 @@ Ecco gli strumenti che useremo più spesso:
     \item \textbf{PictureBox} (Riquadro Immagine): Questo è fondamentale per noi! È un rettangolo speciale dove andremo a "disegnare" i nostri pixel o quadratini che si muovono.
 \end{enumerate}
 
+\subsection{Focus sulla PictureBox: Il nostro "Canvas" per disegnare}
+
+La \textbf{PictureBox} sarà il nostro strumento principale per creare 
+giochi e animazioni. È come una tela bianca dove potremo disegnare 
+tutto quello che vogliamo pixel per pixel.
+
+\subsubsection{Come aggiungere una PictureBox}
+
+\textbf{Procedura passo-passo:}
+
+\begin{enumerate}
+    \item Apri la \textbf{Toolbox} (la barra a sinistra con tutti 
+          i controlli disponibili).
+    
+    \item Cerca "\textbf{PictureBox}" nella lista. Di solito si trova 
+          nella categoria "Common Controls" (Controlli Comuni).
+    
+    \item \textbf{Trascina la PictureBox} sulla tua Form. Apparirà 
+          un rettangolo grigio con una piccola icona.
+    
+    \item \textbf{Ridimensiona} la PictureBox trascinando i bordi. 
+          Per i nostri progetti di animazione, ti consiglio di farla 
+          grande: almeno 600 pixel di larghezza e 400 di altezza.
+    
+    \item La PictureBox si chiamerà automaticamente \texttt{pictureBox1}.
+\end{enumerate}
+
+\subsubsection{Configurare le proprietà della PictureBox}
+
+Dopo aver aggiunto la PictureBox, dobbiamo configurarla correttamente:
+
+\begin{enumerate}
+    \item \textbf{Clicca sulla PictureBox} per selezionarla.
+    
+    \item Vai nella finestra delle \textbf{Proprietà} (di solito 
+          in basso a destra).
+    
+    \item Imposta queste proprietà importanti:
+    
+    \begin{itemize}
+        \item \textbf{(Name)}: Puoi lasciarla come \texttt{pictureBox1} 
+              o darle un nome più descrittivo come \texttt{areaGioco}.
+        
+        \item \textbf{Size}: Imposta le dimensioni. Esempio: 
+              \texttt{600, 400} (larghezza 600, altezza 400).
+        
+        \item \textbf{BackColor}: Imposta su \texttt{White} (bianco) 
+              per avere uno sfondo pulito.
+        
+        \item \textbf{BorderStyle}: Imposta su \texttt{FixedSingle} 
+              per avere un bordo visibile che delimita l'area di gioco.
+        
+        \item \textbf{Location}: Posiziona la PictureBox dove preferisci 
+              sulla Form (puoi anche trascinarla direttamente).
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Perché la PictureBox è speciale?}
+
+A differenza di un semplice \texttt{Panel} o di un'area vuota della Form, 
+la PictureBox ha una proprietà magica chiamata \textbf{Image}.
+
+Questa proprietà ci permette di:
+\begin{itemize}
+    \item Assegnare un'immagine (Bitmap) che abbiamo creato nel codice
+    \item Modificare i singoli pixel dell'immagine
+    \item Mostrare le modifiche all'utente in tempo reale
+\end{itemize}
+
+\textbf{Schema del funzionamento:}
+
+\begin{lstlisting}[caption={Come funziona la PictureBox}]
+// 1. Creiamo un foglio digitale (Bitmap)
+Bitmap foglio = new Bitmap(600, 400);
+
+// 2. Disegniamo sul foglio (modifichiamo i pixel)
+foglio.SetPixel(100, 100, Color.Red);
+
+// 3. Mostriamo il foglio nella PictureBox
+pictureBox1.Image = foglio;
+// Magia! Il pixel rosso appare sullo schermo!
+\end{lstlisting}
+
+\begin{consiglio}
+\textbf{Dimensioni consigliate per progetti diversi:}
+
+\begin{itemize}
+    \item \textbf{Gioco semplice}: 400×300 pixel (più veloce da disegnare)
+    \item \textbf{Animazione standard}: 600×400 pixel (buon compromesso)
+    \item \textbf{Progetto complesso}: 800×600 pixel (più spazio ma più lento)
+\end{itemize}
+
+Ricorda: più grande è la PictureBox, più pixel dobbiamo colorare, 
+quindi più lento sarà il programma. Inizia sempre con dimensioni medie!
+\end{consiglio}
+
+\subsubsection{Verifica che funzioni}
+
+Per testare che la PictureBox sia configurata correttamente, 
+prova questo codice nel \texttt{Form1\_Load}:
+
+\begin{lstlisting}[caption={Test della PictureBox}]
+private void Form1_Load(object sender, EventArgs e)
+{
+    // Creiamo un foglio di prova
+    Bitmap test = new Bitmap(pictureBox1.Width, 
+                             pictureBox1.Height);
+    
+    // Coloriamo tutto di giallo
+    using (Graphics g = Graphics.FromImage(test))
+    {
+        g.Clear(Color.Yellow);
+    }
+    
+    // Mostriamo nella PictureBox
+    pictureBox1.Image = test;
+    
+    // Se vedi un rettangolo giallo, funziona!
+}
+\end{lstlisting}
+
+Se premi F5 e vedi la PictureBox completamente gialla, sei pronto 
+per iniziare a disegnare!
+
 \subsection{Come personalizzare i controlli}
 
 Ogni volta che aggiungi un pulsante o una casella di testo, puoi cambiare le sue \textbf{Proprietà} proprio come abbiamo fatto con la Form:
@@ -797,6 +921,107 @@ A ogni "tic" del Timer dobbiamo:
     \item \textbf{Ridisegnare} l'oggetto nella nuova posizione.
 \end{enumerate}
 
+\subsection{Creiamo la funzione per disegnare un punto}
+
+Prima di far muovere il punto, dobbiamo creare una funzione che sa come 
+disegnarlo sullo schermo. Questa funzione farà tre cose:
+
+\begin{enumerate}
+    \item Cancella tutto lo schermo (riempie di bianco)
+    \item Disegna il punto nella nuova posizione
+    \item Mostra l'immagine aggiornata
+\end{enumerate}
+
+\subsubsection{Preparazione: Variabili globali}
+
+Per prima cosa, dobbiamo dichiarare il foglio digitale come variabile 
+globale nella classe Form:
+
+\begin{lstlisting}[caption={Variabili globali per l'animazione}]
+public partial class Form1 : Form
+{
+    // Variabili globali
+    Bitmap foglio;
+    int x = 10; // Posizione di partenza del punto
+    
+    public Form1()
+    {
+        InitializeComponent();
+    }
+    
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        // Creiamo il foglio grande quanto la PictureBox
+        foglio = new Bitmap(pictureBox1.Width, 
+                            pictureBox1.Height);
+        
+        // Riempiamo il foglio di bianco
+        using (Graphics g = Graphics.FromImage(foglio))
+        {
+            g.Clear(Color.White);
+        }
+        
+        // Mostriamo il foglio vuoto
+        pictureBox1.Image = foglio;
+    }
+}
+\end{lstlisting}
+
+\subsubsection{La funzione disegnaPunto}
+
+Ora creiamo la funzione che disegna il punto:
+
+\begin{lstlisting}[caption={Funzione per disegnare un punto}]
+private void disegnaPunto(int posX, int posY)
+{
+    // 1. Cancelliamo tutto (riempiamo di bianco)
+    using (Graphics g = Graphics.FromImage(foglio))
+    {
+        g.Clear(Color.White);
+    }
+    
+    // 2. Disegniamo il punto rosso nella nuova posizione
+    // Facciamolo un po' più grande (3x3 pixel) per vederlo meglio
+    for (int i = posX - 1; i <= posX + 1; i++)
+    {
+        for (int j = posY - 1; j <= posY + 1; j++)
+        {
+            // Controlla che non esca dai bordi
+            if (i >= 0 && i < foglio.Width && 
+                j >= 0 && j < foglio.Height)
+            {
+                foglio.SetPixel(i, j, Color.Red);
+            }
+        }
+    }
+    
+    // 3. Mostriamo il foglio aggiornato
+    pictureBox1.Image = foglio;
+}
+\end{lstlisting}
+
+\textbf{Spiegazione del codice:}
+
+\begin{itemize}
+    \item \texttt{Graphics.Clear(Color.White)}: Cancella tutto riempiendo 
+          di bianco. È più veloce che usare SetPixel su ogni punto!
+    
+    \item Il doppio ciclo \texttt{for}: Disegna un quadratino 3×3 invece 
+          di un singolo pixel, così il punto si vede meglio.
+    
+    \item Il controllo \texttt{if}: Previene errori se il punto esce 
+          dai bordi dell'immagine.
+\end{itemize}
+
+\begin{consiglio}
+Se vuoi un punto più grande, puoi cambiare i cicli for. 
+Ad esempio, per un punto 5×5:
+
+\texttt{for (int i = posX - 2; i <= posX + 2; i++)}
+
+Il numero che togli e aggiungi a \texttt{posX} decide la grandezza!
+\end{consiglio}
+
 \subsection{Esercizio: Il Punto che cammina}
 
 \begin{esercizio}
@@ -873,6 +1098,128 @@ Vogliamo che il nostro quadratino si muova quando premiamo le frecce della tasti
 
 Per far sì che la finestra "senta" i tasti, dobbiamo attivare una proprietà speciale della Form chiamata \texttt{KeyPreview = true;}.
 
+\subsection{Configurazione Iniziale}
+
+Per far sì che la finestra "senta" i tasti della tastiera, dobbiamo 
+attivare una proprietà speciale della Form chiamata \texttt{KeyPreview}.
+
+\subsubsection{Metodo 1: Impostare KeyPreview nel Designer}
+
+Questo è il metodo più semplice e visivo:
+
+\begin{enumerate}
+    \item \textbf{Clicca sulla Form} (la finestra principale, NON su un 
+          controllo dentro di essa). Clicca su un punto vuoto della Form.
+    
+    \item Guarda la finestra delle \textbf{Proprietà} (di solito 
+          in basso a destra). In alto nella finestra vedrai scritto 
+          "Form1 System.Windows.Forms.Form".
+    
+    \item \textbf{Cerca la proprietà KeyPreview}. Puoi scorrere la lista 
+          o digitare "KeyPreview" nella casella di ricerca in alto.
+    
+    \item Cambia il valore da \texttt{False} a \textbf{\texttt{True}} 
+          usando il menu a tendina.
+    
+    \item Fatto! Ora la Form intercetterà tutti i tasti premuti prima 
+          che arrivino ai controlli.
+\end{enumerate}
+
+\subsubsection{Metodo 2: Impostare KeyPreview nel codice}
+
+In alternativa, puoi attivare KeyPreview nel costruttore della Form:
+
+\begin{lstlisting}[caption={Attivare KeyPreview nel costruttore}]
+public partial class Form1 : Form
+{
+    public Form1()
+    {
+        InitializeComponent();
+        
+        // Attiva la lettura della tastiera
+        this.KeyPreview = true;
+    }
+}
+\end{lstlisting}
+
+\textbf{Nota:} Il costruttore è il metodo \texttt{Form1()} che viene 
+eseguito quando crei la finestra. \texttt{this} si riferisce alla Form 
+stessa.
+
+\subsubsection{Creare l'evento KeyDown}
+
+Dopo aver attivato KeyPreview, devi creare l'evento che gestisce 
+i tasti premuti:
+
+\begin{enumerate}
+    \item \textbf{Seleziona la Form} (clicca su un punto vuoto).
+    
+    \item Nella finestra delle \textbf{Proprietà}, clicca sull'icona 
+          del fulmine ⚡ (Events/Eventi) in alto. Questo mostra tutti 
+          gli eventi disponibili.
+    
+    \item \textbf{Cerca "KeyDown"} nella lista degli eventi.
+    
+    \item \textbf{Fai doppio clic} sulla riga vuota accanto a "KeyDown". 
+          Visual Studio creerà automaticamente la funzione:
+          
+          \texttt{private void Form1\_KeyDown(object sender, KeyEventArgs e)}
+          
+    \item Ora sei pronto per scrivere il codice che reagisce ai tasti!
+\end{enumerate}
+
+\subsubsection{Verifica che funzioni}
+
+Per testare che KeyPreview sia attivo, prova questo codice nell'evento 
+KeyDown:
+
+\begin{lstlisting}[caption={Test del KeyDown}]
+private void Form1_KeyDown(object sender, KeyEventArgs e)
+{
+    // Mostra quale tasto hai premuto
+    MessageBox.Show("Hai premuto: " + e.KeyCode.ToString());
+}
+\end{lstlisting}
+
+Se premi F5 per avviare il programma e poi premi una freccia, 
+dovresti vedere una finestra che dice "Hai premuto: Up" (o Down, 
+Left, Right).
+
+\begin{attenzione}
+\textbf{Problema comune: KeyDown non funziona!}
+
+Se premi i tasti e non succede nulla, controlla:
+
+\begin{enumerate}
+    \item \textbf{KeyPreview è davvero True?} Controlla nelle proprietà 
+          della Form.
+    
+    \item \textbf{Hai creato l'evento sulla Form giusta?} Assicurati 
+          di aver cliccato sulla Form (non su un Button o TextBox) 
+          prima di creare l'evento.
+    
+    \item \textbf{Hai altri controlli che "catturano" i tasti?} 
+          Se hai un Button selezionato, la freccia non arriverà 
+          alla Form. Clicca sulla PictureBox o su un'area vuota 
+          mentre testi.
+\end{enumerate}
+\end{attenzione}
+
+\begin{consiglio}
+\textbf{KeyPreview: Come funziona?}
+
+Normalmente, quando premi un tasto, va direttamente al controllo 
+che è "attivo" (per esempio, se stai scrivendo in una TextBox, 
+i tasti vanno lì).
+
+Con \texttt{KeyPreview = true}, diciamo al computer: 
+"Prima di dare il tasto al controllo attivo, fallo vedere alla Form!". 
+
+È come un guardiano che controlla tutto prima di lasciare passare. 
+Questo ci permette di catturare i tasti freccia per controllare 
+il nostro gioco anche se ci sono altri controlli sulla finestra.
+\end{consiglio}
+
 \subsection{Riconoscere i tasti}
 
 Usiamo un comando chiamato \texttt{switch} che serve a scegliere cosa fare in base al tasto premuto:
@@ -883,6 +1230,119 @@ Usiamo un comando chiamato \texttt{switch} che serve a scegliere cosa fare in ba
     \item \texttt{Keys.Left}: Freccia Sinistra (diminuiamo la X).
     \item \texttt{Keys.Right}: Freccia Destra (aumentiamo la X).
 \end{itemize}
+
+\subsection{Preparazione: Variabili e funzione di disegno}
+
+Per controllare il pixel con la tastiera, abbiamo bisogno di tenere 
+traccia della sua posizione e di una funzione per ridisegnarlo ogni 
+volta che si muove.
+
+\subsubsection{Variabili globali per la posizione}
+
+Dichiara queste variabili all'inizio della classe Form:
+
+\begin{lstlisting}[caption={Variabili globali per controllo tastiera}]
+public partial class Form1 : Form
+{
+    // Variabili globali
+    Bitmap foglio;
+    int x = 100; // Posizione iniziale X
+    int y = 100; // Posizione iniziale Y
+    
+    public Form1()
+    {
+        InitializeComponent();
+        
+        // IMPORTANTE: Attiva la lettura della tastiera!
+        this.KeyPreview = true;
+    }
+    
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        // Creiamo il foglio
+        foglio = new Bitmap(pictureBox1.Width, 
+                            pictureBox1.Height);
+        
+        // Riempiamo di bianco
+        using (Graphics g = Graphics.FromImage(foglio))
+        {
+            g.Clear(Color.White);
+        }
+        
+        // Disegna il punto nella posizione iniziale
+        DisegnaPunto();
+    }
+}
+\end{lstlisting}
+
+\subsubsection{La funzione DisegnaPunto}
+
+Questa funzione ridisegna tutto lo schermo con il punto nella posizione 
+corrente:
+
+\begin{lstlisting}[caption={Funzione DisegnaPunto per controllo tastiera}]
+private void DisegnaPunto()
+{
+    // 1. Cancelliamo tutto lo schermo
+    using (Graphics g = Graphics.FromImage(foglio))
+    {
+        g.Clear(Color.White);
+    }
+    
+    // 2. Disegniamo il punto (5x5 pixel per vederlo meglio)
+    for (int i = x - 2; i <= x + 2; i++)
+    {
+        for (int j = y - 2; j <= y + 2; j++)
+        {
+            // Controlla che non esca dai bordi
+            if (i >= 0 && i < foglio.Width && 
+                j >= 0 && j < foglio.Height)
+            {
+                foglio.SetPixel(i, j, Color.Blue);
+            }
+        }
+    }
+    
+    // 3. Aggiorna la PictureBox
+    pictureBox1.Image = foglio;
+    pictureBox1.Refresh(); // Forza l'aggiornamento immediato
+}
+\end{lstlisting}
+
+\begin{attenzione}
+\textbf{Differenza tra disegnaPunto() e DisegnaPunto()}
+
+Nota che questa funzione si chiama \texttt{DisegnaPunto()} con la D 
+maiuscola, mentre quella dell'esercizio precedente era \texttt{disegnaPunto()}.
+
+\textbf{Perché sono diverse?}
+
+\begin{itemize}
+    \item \texttt{disegnaPunto(posX, posY)}: Prende due parametri 
+          (coordinate) ed è usata dal Timer che calcola continuamente 
+          nuove posizioni.
+    
+    \item \texttt{DisegnaPunto()}: Non prende parametri perché usa 
+          direttamente le variabili globali \texttt{x} e \texttt{y} 
+          che vengono modificate dal KeyDown.
+\end{itemize}
+
+Sono due approcci diversi per lo stesso scopo: disegnare un punto 
+che si muove!
+\end{attenzione}
+
+\begin{consiglio}
+\textbf{Quando usare quale?}
+
+\begin{itemize}
+    \item Usa \texttt{disegnaPunto(x, y)} quando il movimento è 
+          \textbf{automatico} (Timer) e vuoi più flessibilità.
+    
+    \item Usa \texttt{DisegnaPunto()} quando il movimento è 
+          \textbf{manuale} (tastiera) e le coordinate sono sempre 
+          nelle variabili globali.
+\end{itemize}
+\end{consiglio}
 
 \subsection{Esercizio: Pilota il tuo pixel}
 
@@ -1501,6 +1961,240 @@ private void timer1_Tick(object sender, EventArgs e)
     
     \item Le Liste sono lo strumento migliore per gestire grandi quantità di oggetti senza fatica.
 \end{itemize}
+
+% ====================================
+\section{Il Trucco degli Esperti: Usare le Liste}
+
+Finora abbiamo gestito i quadratini uno per uno (\texttt{q1}, \texttt{q2}, 
+\texttt{q3}). Ma cosa succede se ne vogliamo 10? O 100? Scrivere 
+\texttt{disegnaQuadrato(q1); disegnaQuadrato(q2); ... disegnaQuadrato(q100);} 
+sarebbe un incubo!
+
+La soluzione è usare una \textbf{Lista}.
+
+\subsection{Cos'è una List<Quadratino>?}
+
+Una \texttt{List<Quadratino>} è una "scatola" che può contenere tanti 
+oggetti di tipo Quadratino. Possiamo aggiungere, togliere e scorrere 
+tutti gli elementi facilmente.
+
+\subsection{Creare e riempire la lista}
+
+Ecco come dichiarare e riempire una lista di quadratini:
+
+\begin{lstlisting}[caption={Lista di quadratini}]
+public partial class Form1 : Form
+{
+    // Variabili globali
+    Bitmap foglio;
+    List<Quadratino> quadratini; // La nostra lista!
+    Ostacolo o1;
+    
+    public Form1()
+    {
+        InitializeComponent();
+    }
+    
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        // Creiamo il foglio
+        foglio = new Bitmap(pictureBox1.Width, 
+                            pictureBox1.Height);
+        
+        // Creiamo la lista vuota
+        quadratini = new List<Quadratino>();
+        
+        // Aggiungiamo 5 quadratini con proprietà casuali
+        Random rnd = new Random();
+        for (int i = 0; i < 5; i++)
+        {
+            // Posizione casuale
+            int posX = rnd.Next(50, pictureBox1.Width - 50);
+            int posY = rnd.Next(50, pictureBox1.Height - 50);
+            
+            // Velocità casuale (tra -3 e +3)
+            int velX = rnd.Next(-3, 4);
+            int velY = rnd.Next(-3, 4);
+            
+            // Colori diversi
+            Color[] colori = { Color.Red, Color.Blue, 
+                               Color.Green, Color.Orange, 
+                               Color.Purple };
+            
+            // Creiamo e aggiungiamo il quadratino
+            Quadratino q = new Quadratino(posX, posY, 
+                                           velX, velY, 
+                                           20, colori[i]);
+            quadratini.Add(q);
+        }
+        
+        // Creiamo l'ostacolo
+        o1 = new Ostacolo(200, 200, 300, 300);
+        
+        // Avviamo il timer
+        timer1.Enabled = true;
+    }
+}
+\end{lstlisting}
+
+\subsection{Il ciclo foreach: Scorrere la lista}
+
+Invece di scrivere \texttt{disegnaQuadrato(q1); disegnaQuadrato(q2);} 
+per ogni quadratino, usiamo il \textbf{ciclo foreach}:
+
+\begin{lstlisting}[caption={Ciclo foreach}]
+foreach (Quadratino q in quadratini)
+{
+    // Questo codice si ripete per OGNI quadratino 
+    // nella lista automaticamente!
+    disegnaQuadrato(q);
+}
+\end{lstlisting}
+
+\textbf{Come funziona:}
+\begin{itemize}
+    \item \texttt{foreach}: Significa "per ogni"
+    \item \texttt{Quadratino q}: A ogni giro, \texttt{q} diventa uno 
+          dei quadratini della lista
+    \item \texttt{in quadratini}: Indica da quale lista prendere gli elementi
+\end{itemize}
+
+È come dire: "Per ogni quadratino che trovi nella mia lista, 
+fai questa operazione".
+
+\subsection{Il Timer con le Liste}
+
+Ecco come diventa il Timer usando le liste:
+
+\begin{lstlisting}[caption={Timer con List e foreach}]
+private void timer1_Tick(object sender, EventArgs e)
+{
+    // 1. FASE CANCELLAZIONE
+    foreach (Quadratino q in quadratini)
+    {
+        cancellaQuadrato(q);
+    }
+    
+    // 2. FASE RICALCOLO
+    // Attenzione: non possiamo modificare la lista 
+    // durante il foreach, quindi usiamo un ciclo for
+    for (int i = 0; i < quadratini.Count; i++)
+    {
+        quadratini[i] = ricalcolaPosizione(quadratini[i]);
+        controllaCollisioneOstacoli(quadratini[i], o1);
+    }
+    
+    // 3. FASE DISEGNO
+    // Ridisegna l'ostacolo
+    if (o1 != null)
+        disegnaOstacolo(o1);
+    
+    // Ridisegna tutti i quadratini
+    foreach (Quadratino q in quadratini)
+    {
+        disegnaQuadrato(q);
+    }
+}
+\end{lstlisting}
+
+\begin{attenzione}
+\textbf{Perché usiamo for invece di foreach nella fase ricalcolo?}
+
+Nella fase di ricalcolo scriviamo:
+\texttt{quadratini[i] = ricalcolaPosizione(quadratini[i]);}
+
+Questo \textbf{modifica} l'oggetto nella lista. Con \texttt{foreach} 
+non possiamo farlo perché \texttt{q} è solo una "copia temporanea".
+
+Con il ciclo \texttt{for} accediamo direttamente alla lista con 
+\texttt{quadratini[i]} e possiamo modificarla.
+
+\textbf{Regola pratica:}
+\begin{itemize}
+    \item Usa \texttt{foreach} quando vuoi solo LEGGERE (cancellare, 
+          disegnare)
+    \item Usa \texttt{for} quando vuoi MODIFICARE (ricalcolare posizione)
+\end{itemize}
+\end{attenzione}
+
+\subsection{Esercizio Finale: Il Rimbalzo Multiplo}
+
+\begin{esercizio}
+\textbf{Obiettivo:} Creare un programma con 10 quadratini colorati 
+che rimbalzano contro i bordi e contro un ostacolo centrale.
+
+\textbf{Istruzioni:}
+\begin{enumerate}
+    \item Crea un nuovo progetto Windows Forms.
+    
+    \item Aggiungi una PictureBox grande (es. 600×400) e un Timer.
+    
+    \item Copia le classi \texttt{Quadratino} e \texttt{Ostacolo} 
+          nel tuo progetto.
+    
+    \item Copia le funzioni \texttt{disegnaQuadrato}, 
+          \texttt{cancellaQuadrato}, \texttt{disegnaOstacolo} e 
+          \texttt{ricalcolaPosizione}.
+    
+    \item Nel \texttt{Form1\_Load}:
+    \begin{itemize}
+        \item Crea il foglio Bitmap
+        \item Crea una lista e riempila con 10 quadratini casuali
+        \item Crea un ostacolo al centro
+        \item Avvia il timer
+    \end{itemize}
+    
+    \item Nel \texttt{timer1\_Tick}, implementa il ciclo completo 
+          con le tre fasi (cancella, ricalcola, disegna) usando 
+          i cicli visti sopra.
+\end{enumerate}
+\end{esercizio}
+
+\textbf{Bonus:} Prova ad aggiungere queste migliorie:
+
+\begin{itemize}
+    \item Un pulsante "Aggiungi Quadratino" che aggiunge un nuovo 
+          quadratino alla lista mentre il programma è in esecuzione
+    
+    \item Un pulsante "Ferma/Riavvia" che attiva/disattiva il Timer
+    
+    \item Mostra il numero di quadratini attivi con una Label 
+          (usa \texttt{quadratini.Count})
+\end{itemize}
+
+\subsection{Cosa abbiamo imparato in questa sezione avanzata}
+
+\begin{itemize}
+    \item Le \textbf{Liste} permettono di gestire un numero variabile 
+          di oggetti senza sapere quanti saranno.
+    
+    \item Il ciclo \textbf{foreach} semplifica enormemente il codice 
+          quando dobbiamo fare la stessa operazione su tutti gli elementi.
+    
+    \item Usiamo \textbf{for} quando dobbiamo modificare gli oggetti, 
+          \textbf{foreach} quando dobbiamo solo leggerli.
+    
+    \item Con le Liste possiamo creare animazioni complesse con centinaia 
+          di oggetti usando poche righe di codice!
+\end{itemize}
+
+\begin{consiglio}
+\textbf{Il Progetto dei tuoi sogni}
+
+Ora hai tutti gli strumenti per creare il TUO gioco o animazione! 
+Pensa a cosa ti piacerebbe vedere:
+
+\begin{itemize}
+    \item Un simulatore di particelle colorate?
+    \item Un gioco dove controlli un quadratino che deve evitare 
+          gli altri?
+    \item Una "pioggia" di quadratini che cadono dall'alto?
+    \item Un labirinto con ostacoli da evitare?
+\end{itemize}
+
+Tutto quello che hai imparato in questa dispensa ti permette di 
+realizzarlo. Sperimenta, prova, sbaglia e divertiti programmando!
+\end{consiglio}
 
 % ====================================
 % CONCLUSIONE
